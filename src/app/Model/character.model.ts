@@ -6,4 +6,6 @@ export interface Character {
   isFavorite: boolean;
 
   createdDate: Date;
+
+  image: string;
 }
