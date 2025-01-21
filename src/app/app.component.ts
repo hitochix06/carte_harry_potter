@@ -6,6 +6,7 @@ import { Character } from './Model/character.model';
 import { SortOption } from './Model/SortOption';
 import { SortByDate } from './product.pipe';
 import { FormsModule } from '@angular/forms';
+import { ProductService } from './product.service';
 
 @Component({
   selector: 'app-root',
