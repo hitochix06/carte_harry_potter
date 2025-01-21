@@ -13,6 +13,10 @@ import { CommonModule } from '@angular/common';
       <div class="flex justify-between items-start">
         <div>
           <h1 class="text-xl font-bold text-gray-800">{{ character.name }}</h1>
+          <img [src]="character.image"
+               [alt]="character.name"
+               class="w-32 h-32 object-cover rounded-lg mt-2"
+               (error)="onImageError($event)">
           <p class="text-sm text-gray-600">Créé le: {{ character.createdDate | date: 'dd/MM/yyyy' }}</p>
         </div>
         <button
@@ -85,6 +89,11 @@ export class ProductCardComponent {
 
   switchFav() {
     this.addItemEvent.emit(this.character);
+  }
+
+  onImageError(event: any) {
+    console.error('Erreur de chargement image:', event.target.src);
+    event.target.src = '/assets/images/default.jpg';
   }
 
 }
