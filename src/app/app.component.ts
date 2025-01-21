@@ -20,9 +20,7 @@ import { ProductService } from './product.service';
     SortByNamePipe,
   ],
   template: `
-    <div
-      class="min-h-screen bg-gradient-to-br from-purple-100 to-indigo-100 p-6"
-    >
+
       <div class="max-w-7xl mx-auto">
         <!-- Header -->
         <header class="text-center mb-12">
@@ -72,7 +70,7 @@ import { ProductService } from './product.service';
         </div>
       </div>
       <router-outlet></router-outlet>
-    </div>
+    
   `,
 })
 export class AppComponent {
