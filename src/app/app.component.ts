@@ -57,7 +57,7 @@ import { ProductService } from './product.service';
           @for (product of products | sortByDate:(selectedSort === 'date-asc');
           track product.id) {
           <app-product-card
-            [product]="product"
+            [character]="product"
             (addItemEvent)="switchFav(product)"
           />
           }
@@ -65,7 +65,7 @@ import { ProductService } from './product.service';
           { @for (product of products | sortByName:(selectedSort ===
           'name-asc'); track product.id) {
           <app-product-card
-            [product]="product"
+            [character]="product"
             (addItemEvent)="switchFav(product)"
           />
           } }

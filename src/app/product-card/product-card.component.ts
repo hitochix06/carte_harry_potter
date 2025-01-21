@@ -1,31 +1,34 @@
 import { Component } from '@angular/core';
-import { Input, Output, EventEmitter, } from '@angular/core';
+import { Input, Output, EventEmitter } from '@angular/core';
+import { DatePipe } from '@angular/common';
 import { Character } from '../Model/character.model';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-product-card',
-  imports: [],
+  standalone: true,
+  imports: [CommonModule, DatePipe],
   template: `
      <div class="bg-white rounded-lg shadow-md p-4 m-2 hover:shadow-lg transition-shadow">
       <div class="flex justify-between items-start">
         <div>
-          <h1 class="text-xl font-bold text-gray-800">{{ product.name }}</h1>
-          <p class="text-sm text-gray-600">Créé le: {{ product.createdDate | date: 'dd/MM/yyyy' }}</p>
+          <h1 class="text-xl font-bold text-gray-800">{{ character.name }}</h1>
+          <p class="text-sm text-gray-600">Créé le: {{ character.createdDate | date: 'dd/MM/yyyy' }}</p>
         </div>
         <button
           class="favorite-btn group relative"
           (click)="switchFav()"
-          [class.active]="product.isFavorite">
+          [class.active]="character.isFavorite">
           <span class="sr-only">Ajouter aux favoris</span>
           <svg xmlns="http://www.w3.org/2000/svg"
                class="h-6 w-6 transition-all duration-300 ease-in-out"
-               [class.text-yellow-400]="product.isFavorite"
-               [class.text-gray-400]="!product.isFavorite"
+               [class.text-yellow-400]="character.isFavorite"
+               [class.text-gray-400]="!character.isFavorite"
                fill="currentColor"
                viewBox="0 0 24 24">
             <path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/>
           </svg>
-          <span class="tooltip">{{ product.isFavorite ? 'Retirer des favoris' : 'Ajouter aux favoris' }}</span>
+          <span class="tooltip">{{ character.isFavorite ? 'Retirer des favoris' : 'Ajouter aux favoris' }}</span>
         </button>
       </div>
     </div>
@@ -71,16 +74,17 @@ import { Character } from '../Model/character.model';
   ],
 })
 export class ProductCardComponent {
-  @Input({ required: true }) product: Character = {
+  @Input({ required: true }) character: Character = {
     id: 0,
     name: '',
     isFavorite: false,
     createdDate: new Date(),
+    image: '',
   };
   @Output() addItemEvent = new EventEmitter<Character>();
 
   switchFav() {
-    this.addItemEvent.emit(this.product);
+    this.addItemEvent.emit(this.character);
   }
 
 }
