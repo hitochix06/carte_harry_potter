@@ -1,59 +1,91 @@
 # CarteHarryPotter
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 19.1.3.
+Une application Angular permettant de gérer une collection de cartes Harry Potter.
 
-## Development server
+## Prérequis
 
-To start a local development server, run:
+- Node.js (version 18 ou supérieure)
+- NPM (version 9 ou supérieure)
+- Angular CLI (version 19.1.3)
 
+## Installation
+
+1. Clonez le dépôt :
+```bash
+git clone [URL_DU_REPO]
+cd CarteHarryPotter
+```
+
+2. Installez les dépendances :
+```bash
+npm install
+```
+
+## Démarrage du projet
+
+Pour lancer le serveur de développement :
 ```bash
 ng serve
 ```
+L'application sera accessible à l'adresse `http://localhost:4200/`
 
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
+## Fonctionnalités
 
-## Code scaffolding
+- 🎴 Affichage des cartes Harry Potter
+- ⭐ Gestion des favoris
+- 🔍 Recherche et tri des cartes
+- 📱 Interface responsive
 
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
+## Structure du projet
 
-```bash
-ng generate component component-name
+```
+src/
+├── app/
+│   ├── components/
+│   │   ├── product-card/     # Composant de carte
+│   │   ├── home/            # Page d'accueil
+│   │   └── favorites/       # Page des favoris
+│   ├── services/
+│   │   └── product.service.ts
+│   └── pipes/
+│       └── sort-by-name.pipe.ts
 ```
 
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
+## Tests
 
-```bash
-ng generate --help
-```
-
-## Building
-
-To build the project run:
-
-```bash
-ng build
-```
-
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
-
-## Running unit tests
-
-To execute unit tests with the [Karma](https://karma-runner.github.io) test runner, use the following command:
-
+### Tests unitaires
 ```bash
 ng test
 ```
 
-## Running end-to-end tests
-
-For end-to-end (e2e) testing, run:
-
+### Tests end-to-end
 ```bash
 ng e2e
 ```
 
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
+## Build Production
 
-## Additional Resources
+Pour générer une version de production :
+```bash
+ng build --prod
+```
+Les fichiers seront générés dans le dossier `dist/`.
 
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+## Contribution
+
+1. Fork le projet
+2. Créez votre branche (`git checkout -b feature/AmazingFeature`)
+3. Committez vos changements (`git commit -m 'Add some AmazingFeature'`)
+4. Push vers la branche (`git push origin feature/AmazingFeature`)
+5. Ouvrez une Pull Request
+
+## Ressources utiles
+
+- [Documentation Angular](https://angular.dev/)
+- [Angular CLI Documentation](https://angular.dev/tools/cli)
+- [Angular Material](https://material.angular.io/)
+
+## Licence
+
+Ce projet est sous licence MIT. Voir le fichier `LICENSE` pour plus de détails.
+
