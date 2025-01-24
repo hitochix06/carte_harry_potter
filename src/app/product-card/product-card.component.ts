@@ -45,6 +45,17 @@ import { CommonModule } from '@angular/common';
           <div class="watermark">M</div>
         </div>
       </div>
+
+      <div class="external-info">
+        <div class="date-section">
+          <i class="fas fa-calendar"></i>
+          {{ character.createdDate | date:'dd/MM/yyyy' }}
+        </div>
+        <button class="favorite-button" (click)="switchFav()">
+          <i [class]="character.isFavorite ? 'fas fa-heart' : 'far fa-heart'"></i>
+          {{ character.isFavorite ? '' : '' }}
+        </button>
+      </div>
     </div>
   `,
   styles: [`
@@ -183,6 +194,49 @@ import { CommonModule } from '@angular/common';
       letter-spacing: 1px;
     }
 
+    .card-footer {
+      width: 100%;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 15px;
+      margin-bottom: 15px;
+      padding: 0 20px;
+      background-color: rgba(255, 255, 255, 0.1);
+      border-radius: 5px;
+      padding: 8px 20px;
+    }
+
+    .creation-date {
+      font-family: 'Courier New', monospace;
+      font-size: 12px;
+      color: rgba(0,0,0,0.8);
+      font-weight: bold;
+    }
+
+    .favorite-btn {
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 8px;
+      transition: transform 0.2s ease;
+      background-color: rgba(255, 255, 255, 0.2);
+      border-radius: 50%;
+    }
+
+    .favorite-btn:hover {
+      transform: scale(1.2);
+    }
+
+    .favorite-btn i {
+      color: #740001;
+      font-size: 20px;
+    }
+
+    .fa-heart {
+      transition: color 0.3s ease;
+    }
+
     .stamp {
       position: absolute;
       bottom: 30px;
@@ -222,6 +276,53 @@ import { CommonModule } from '@angular/common';
       color: rgba(0,0,0,0.03);
       font-family: 'Playfair Display', serif;
       pointer-events: none;
+    }
+
+    .external-info {
+      margin-top: 20px;
+      padding: 15px;
+      background: rgba(255, 255, 255, 0.9);
+      border-radius: 8px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      width: 300px;
+    }
+
+    .date-section {
+      font-family: 'Courier New', monospace;
+      color: #333;
+      font-size: 14px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .date-section i {
+      color: #740001;
+    }
+
+    .favorite-button {
+      background: #740001;
+      color: white;
+      border: none;
+      padding: 8px 16px;
+      border-radius: 20px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      transition: all 0.3s ease;
+    }
+
+    .favorite-button:hover {
+      background: #8f0001;
+      transform: translateY(-2px);
+    }
+
+    .favorite-button i {
+      font-size: 16px;
     }
   `]
 })
