@@ -1,13 +1,11 @@
-import { Component } from '@angular/core';
-import { Input, Output, EventEmitter } from '@angular/core';
-import { DatePipe } from '@angular/common';
-import { Character } from '../Model/character.model';
+import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { Character } from '../Model/character.model';
 
 @Component({
   selector: 'app-product-card',
   standalone: true,
-  imports: [CommonModule, DatePipe],
+  imports: [CommonModule],
   template: `
     <div class="card-container">
       <div class="identity-card" [ngStyle]="{'background-image': getHouseColor()}">
@@ -21,7 +19,7 @@ import { CommonModule } from '@angular/common';
           </div>
 
           <h2 class="card-title">IDENTITY CARD</h2>
-          <p class="card-subtitle">THIS IS TO IDENTIFY</p>
+          <p class="card-subtitle">{{ character.house.toUpperCase() }}</p>
 
           <div class="photo-frame">
             <div class="photo-container">
@@ -51,9 +49,8 @@ import { CommonModule } from '@angular/common';
           <i class="fas fa-calendar"></i>
           {{ character.createdDate | date:'dd/MM/yyyy' }}
         </div>
-        <button class="favorite-button" (click)="switchFav()">
+        <button class="favorite-button" (click)="toggleFavorite()">
           <i [class]="character.isFavorite ? 'fas fa-heart' : 'far fa-heart'"></i>
-          {{ character.isFavorite ? '' : '' }}
         </button>
       </div>
     </div>
@@ -194,47 +191,32 @@ import { CommonModule } from '@angular/common';
       letter-spacing: 1px;
     }
 
-    .card-footer {
-      width: 100%;
+    .external-info {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      margin-top: 15px;
-      margin-bottom: 15px;
-      padding: 0 20px;
-      background-color: rgba(255, 255, 255, 0.1);
-      border-radius: 5px;
-      padding: 8px 20px;
+      padding: 10px;
+      background: rgba(255, 255, 255, 0.9);
+      border-radius: 8px;
+      margin-top: 10px;
     }
 
-    .creation-date {
-      font-family: 'Courier New', monospace;
-      font-size: 12px;
-      color: rgba(0,0,0,0.8);
-      font-weight: bold;
+    .date-section {
+      font-size: 0.9em;
+      color: #666;
     }
 
-    .favorite-btn {
+    .favorite-button {
       background: none;
       border: none;
       cursor: pointer;
-      padding: 8px;
-      transition: transform 0.2s ease;
-      background-color: rgba(255, 255, 255, 0.2);
-      border-radius: 50%;
-    }
-
-    .favorite-btn:hover {
-      transform: scale(1.2);
-    }
-
-    .favorite-btn i {
+      font-size: 1.2em;
       color: #740001;
-      font-size: 20px;
+      transition: transform 0.2s ease;
     }
 
-    .fa-heart {
-      transition: color 0.3s ease;
+    .favorite-button:hover {
+      transform: scale(1.1);
     }
 
     .stamp {
@@ -249,109 +231,50 @@ import { CommonModule } from '@angular/common';
       align-items: center;
       justify-content: center;
       transform: rotate(-15deg);
+      opacity: 0.8;
     }
 
     .stamp-inner {
-      width: 54px;
-      height: 54px;
-      border: 1px solid rgba(0,0,0,0.2);
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
       font-size: 8px;
       text-align: center;
-      padding: 5px;
-      color: rgba(0,0,0,0.4);
+      line-height: 1;
+      color: rgba(0,0,0,0.6);
       text-transform: uppercase;
       letter-spacing: 0.5px;
     }
 
     .watermark {
       position: absolute;
-      top: 50%;
+      bottom: 20px;
       left: 50%;
-      transform: translate(-50%, -50%);
-      font-size: 150px;
-      color: rgba(0,0,0,0.03);
+      transform: translateX(-50%);
       font-family: 'Playfair Display', serif;
+      font-size: 120px;
+      color: rgba(0,0,0,0.03);
       pointer-events: none;
-    }
-
-    .external-info {
-      margin-top: 20px;
-      padding: 15px;
-      background: rgba(255, 255, 255, 0.9);
-      border-radius: 8px;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      width: 300px;
-    }
-
-    .date-section {
-      font-family: 'Courier New', monospace;
-      color: #333;
-      font-size: 14px;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-
-    .date-section i {
-      color: #740001;
-    }
-
-    .favorite-button {
-      background: #740001;
-      color: white;
-      border: none;
-      padding: 8px 16px;
-      border-radius: 20px;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      transition: all 0.3s ease;
-    }
-
-    .favorite-button:hover {
-      background: #8f0001;
-      transform: translateY(-2px);
-    }
-
-    .favorite-button i {
-      font-size: 16px;
     }
   `]
 })
 export class ProductCardComponent {
-  @Input({ required: true }) character: Character = {
-    id: 0,
-    name: '',
-    isFavorite: false,
-    createdDate: new Date(),
-    image: '',
-  };
-  @Output() addItemEvent = new EventEmitter<Character>();
-
-  switchFav() {
-    this.addItemEvent.emit(this.character);
-  }
-
-  onImageError(event: any) {
-    console.error('Erreur de chargement image:', event.target.src);
-    event.target.src = '/assets/images/default.jpg';
-  }
+  @Input({ required: true }) character!: Character;
+  @Output() favoriteChange = new EventEmitter<Character>();
 
   getHouseColor(): string {
-    const colors: { [key: number]: string } = {
-      0: 'linear-gradient(135deg, #740001 0%, #ae0001 100%)',  // Gryffondor
-      1: 'linear-gradient(135deg, #1a472a 0%, #2a623d 100%)',  // Serpentard
-      2: 'linear-gradient(135deg, #ecb939 0%, #f0c75e 100%)',  // Poufsouffle
-      3: 'linear-gradient(135deg, #0e1a40 0%, #222f5b 100%)'   // Serdaigle
+    const colors: { [key: string]: string } = {
+      'Gryffondor': 'linear-gradient(135deg, #740001 0%, #ae0001 100%)',
+      'Serpentard': 'linear-gradient(135deg, #1a472a 0%, #2a623d 100%)',
+      'Serdaigle': 'linear-gradient(135deg, #0e1a40 0%, #222f5b 100%)',
+      'Poufsouffle': 'linear-gradient(135deg, #ecb939 0%, #f0c75e 100%)'
     };
-    return colors[this.character.id % 4] || colors[0];
+    return colors[this.character.house] || colors['Gryffondor'];
+  }
+
+  onImageError(event: Event): void {
+    const img = event.target as HTMLImageElement;
+    img.src = 'assets/default-avatar.jpg';
+  }
+
+  toggleFavorite(): void {
+    this.favoriteChange.emit(this.character);
   }
 }

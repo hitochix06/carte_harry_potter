@@ -1,103 +1,152 @@
-
-import { Component, Input, Output, EventEmitter, inject } from '@angular/core';
-import { RouterOutlet } from '@angular/router';
-import { ProductCardComponent } from './product-card/product-card.component';
-import { SortByNamePipe } from './sort-by-name.pipe';
-import { Character } from './Model/character.model';
-import { SortOption } from './Model/SortOption';
-import { SortByDate } from './product.pipe';
+import { Component, OnInit } from '@angular/core';
+import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { ProductCardComponent } from './product-card/product-card.component';
 import { ProductService } from './product.service';
+import { Character } from './Model/character.model';
+import { SearchPipe } from './search.pipe';
+import { SortByDatePipe } from './sort-by-date.pipe';
+import { SortByNamePipe } from './sort-by-name.pipe';
+import { HeaderComponent } from './header/header.component';
+import { FooterComponent } from './footer/footer.component';
 
 @Component({
   selector: 'app-root',
   standalone: true,
   imports: [
-    RouterOutlet,
-    ProductCardComponent,
-    SortByDate,
+    CommonModule,
     FormsModule,
-    SortByNamePipe,
+    ProductCardComponent,
+    HeaderComponent,
+    FooterComponent
   ],
   template: `
+    <app-header></app-header>
 
-      <div class="max-w-7xl mx-auto">
-        <!-- Header -->
-        <header class="text-center mb-12">
-          <h1 class="text-4xl font-bold text-indigo-800 mb-4">{{ title }}</h1>
-          <div
-            class="inline-flex items-center gap-2 bg-indigo-600 text-white px-4 py-2 rounded-full"
+    <main class="main-content">
+      <div class="container">
+        <div class="search-sort-container">
+          <input
+            type="text"
+            [(ngModel)]="searchTerm"
+            placeholder="Rechercher un personnage..."
+            class="search-input"
           >
-            <span class="text-xl">{{ countFav }}</span>
-            <span class="text-xl">{{
-              countFav <= 1 ? 'Favori' : 'Favoris'
-            }}</span>
+
+          <div class="sort-controls">
+            <select [(ngModel)]="sortType" class="sort-select">
+              <option value="name">Trier par nom</option>
+              <option value="date">Trier par date</option>
+            </select>
+
+            <button (click)="toggleSortDirection()" class="sort-direction-btn">
+              <i [class]="sortAscending ? 'fas fa-sort-up' : 'fas fa-sort-down'"></i>
+            </button>
           </div>
-        </header>
-
-        <!-- Sort Select -->
-        <div class="mb-8 flex justify-center">
-          <select
-            [(ngModel)]="selectedSort"
-            class="w-64 px-4 py-2 rounded-lg border-2 border-indigo-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 bg-white shadow-sm"
-          >
-            @for (option of sortOptions; track option.id) {
-            <option [value]="option.id">{{ option.label }}</option>
-            }
-          </select>
         </div>
 
-        <!-- Products Grid -->
-        <div
-          class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6"
-        >
-          @if (selectedSort === 'date-asc' || selectedSort === 'date-desc') {
-          @for (product of products | sortByDate:(selectedSort === 'date-asc');
-          track product.id) {
+        <div class="characters-grid">
           <app-product-card
-            [character]="product"
-            (addItemEvent)="switchFav(product)"
-          />
-          }
-        } @if (selectedSort === 'name-asc' || selectedSort === 'name-desc')
-          { @for (product of products | sortByName:(selectedSort ===
-          'name-asc'); track product.id) {
-          <app-product-card
-            [character]="product"
-            (addItemEvent)="switchFav(product)"
-          />
-          } }
+            *ngFor="let character of getSortedCharacters()"
+            [character]="character"
+            (favoriteChange)="onFavoriteChange($event)"
+          ></app-product-card>
         </div>
       </div>
-      <router-outlet></router-outlet>
-    
+    </main>
+
+    <app-footer></app-footer>
   `,
+  styles: [`
+    .main-content {
+      min-height: calc(100vh - 200px);
+      background-color: #f5f5f5;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+
+    .search-sort-container {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+      gap: 20px;
+      background: white;
+      padding: 1rem;
+      border-radius: 8px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+
+    .search-input {
+      flex: 1;
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      font-size: 16px;
+    }
+
+    .sort-controls {
+      display: flex;
+      gap: 10px;
+    }
+
+    .sort-select {
+      padding: 8px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      font-size: 14px;
+    }
+
+    .sort-direction-btn {
+      padding: 8px 12px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      background: white;
+      cursor: pointer;
+      transition: background-color 0.2s;
+    }
+
+    .sort-direction-btn:hover {
+      background-color: #f0f0f0;
+    }
+
+    .characters-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 20px;
+      padding: 20px;
+    }
+  `]
 })
-export class AppComponent {
-  title = 'carte_harry_potter';
-  countFav = 0;
-  selectedSort = 'date-asc';
-  @Input({ required: true }) product: Character = {
-    id: 0,
-    name: '',
-    isFavorite: false,
-    createdDate: new Date(),
-    image: '',
-  };
-  @Output() addItemEvent = new EventEmitter<number>();
+export class AppComponent implements OnInit {
+  characters: Character[] = [];
+  searchTerm: string = '';
+  sortType: 'name' | 'date' = 'name';
+  sortAscending: boolean = true;
 
-  productService = inject(ProductService);
-  products = this.productService.products;
+  constructor(private productService: ProductService) {}
 
-  sortOptions: SortOption[] = [
-    { id: 'date-asc', label: 'Date (plus ancien)' },
-    { id: 'date-desc', label: 'Date (plus récent)' },
-    { id: 'name-asc', label: 'Nom (A-Z)' },
-    { id: 'name-desc', label: 'Nom (Z-A)' },
-  ];
+  ngOnInit() {
+    this.characters = this.productService.getProducts();
+  }
 
-  switchFav(product: Character) {
-    product.isFavorite = !product.isFavorite;
-    this.countFav += product.isFavorite ? 1 : -1;
+  toggleSortDirection() {
+    this.sortAscending = !this.sortAscending;
+  }
+
+  getSortedCharacters(): Character[] {
+    return this.productService.sortCharacters(
+      this.productService.searchCharacters(this.searchTerm),
+      this.sortType,
+      this.sortAscending
+    );
+  }
+
+  onFavoriteChange(character: Character) {
+    this.productService.toggleFavorite(character);
   }
 }

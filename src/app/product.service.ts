@@ -1,15 +1,15 @@
 import { Injectable } from '@angular/core';
+import { BehaviorSubject, Observable } from 'rxjs';
 import { Character } from './Model/character.model';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ProductService {
-
-
-  products = [
-    <Character>{id: 0,
-      house: 'Gryffindor',
+  private characters: Character[] = [
+    {
+      id: 0,
+      house: 'Gryffondor',
       name: 'Harry Potter',
       image: '/assets/images/harrypotter.jpg',
       isFavorite: false,
@@ -116,19 +116,75 @@ export class ProductService {
     },
   ];
 
+  private charactersSubject = new BehaviorSubject<Character[]>(this.characters);
+  private favoritesCountSubject = new BehaviorSubject<number>(0);
 
+  constructor() {
+    this.updateFavoritesCount();
+  }
+
+  // Obtenir tous les personnages
   getProducts(): Character[] {
-    return this.products;
+    return this.characters;
   }
 
-  getProduct(id: number) {
-    return this.products[id];
+  // Observable pour les personnages
+  getProductsObservable(): Observable<Character[]> {
+    return this.charactersSubject.asObservable();
   }
 
-  swithFav(product: Character) {
-    product.isFavorite = !product.isFavorite;
+  // Obtenir un personnage par ID
+  getProduct(id: number): Character | undefined {
+    return this.characters.find(char => char.id === id);
   }
 
+  // Basculer l'état favori d'un personnage
+  toggleFavorite(character: Character): void {
+    character.isFavorite = !character.isFavorite;
+    this.updateFavoritesCount();
+    this.charactersSubject.next(this.characters);
+  }
 
-  constructor() { }
+  // Obtenir le nombre de favoris
+  getFavoritesCount(): Observable<number> {
+    return this.favoritesCountSubject.asObservable();
+  }
+
+  // Obtenir uniquement les personnages favoris
+  getFavorites(): Character[] {
+    return this.characters.filter(char => char.isFavorite);
+  }
+
+  // Mettre à jour le compteur de favoris
+  private updateFavoritesCount(): void {
+    const count = this.characters.filter(char => char.isFavorite).length;
+    this.favoritesCountSubject.next(count);
+  }
+
+  // Rechercher des personnages
+  searchCharacters(term: string): Character[] {
+    if (!term.trim()) {
+      return this.characters;
+    }
+
+    term = term.toLowerCase();
+    return this.characters.filter(char =>
+      char.name.toLowerCase().includes(term) ||
+      char.house.toLowerCase().includes(term)
+    );
+  }
+
+  // Trier les personnages
+  sortCharacters(characters: Character[], sortType: 'name' | 'date', ascending: boolean): Character[] {
+    return [...characters].sort((a, b) => {
+      if (sortType === 'name') {
+        return ascending
+          ? a.name.localeCompare(b.name)
+          : b.name.localeCompare(a.name);
+      } else {
+        const comparison = a.createdDate.getTime() - b.createdDate.getTime();
+        return ascending ? comparison : -comparison;
+      }
+    });
+  }
 }
