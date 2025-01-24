@@ -1,10 +1,12 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { RouterLink, RouterLinkActive } from '@angular/router';
+import { ProductService } from '../product.service';
 
 @Component({
   selector: 'app-header',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, RouterLink, RouterLinkActive],
   template: `
     <header class="header">
       <div class="header-content">
@@ -13,8 +15,11 @@ import { CommonModule } from '@angular/common';
           <h1>Cartes Harry Potter</h1>
         </div>
         <nav class="navigation">
-          <a href="#" class="nav-link">Accueil</a>
-          <a href="#" class="nav-link">Favoris</a>
+          <a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}" class="nav-link">Accueil</a>
+          <a routerLink="/favoris" routerLinkActive="active" class="nav-link">
+            Favoris
+            <span class="favorite-count" *ngIf="favoriteCount > 0">({{ favoriteCount }})</span>
+          </a>
         </nav>
       </div>
     </header>
@@ -63,11 +68,36 @@ import { CommonModule } from '@angular/common';
       text-decoration: none;
       font-size: 1.1rem;
       transition: color 0.3s ease;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
     }
 
     .nav-link:hover {
       color: #ffd700;
     }
+
+    .nav-link.active {
+      color: #ffd700;
+      font-weight: bold;
+    }
+
+    .favorite-count {
+      font-size: 0.9rem;
+      background: #ffd700;
+      color: #740001;
+      padding: 0.2rem 0.5rem;
+      border-radius: 12px;
+      font-weight: bold;
+    }
   `]
 })
-export class HeaderComponent {}
+export class HeaderComponent {
+  favoriteCount: number = 0;
+
+  constructor(private productService: ProductService) {
+    this.productService.getFavoritesCount().subscribe(count => {
+      this.favoriteCount = count;
+    });
+  }
+}
