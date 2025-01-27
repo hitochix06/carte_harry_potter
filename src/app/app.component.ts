@@ -26,7 +26,6 @@ import { FooterComponent } from './footer/footer.component';
     .main-content {
       min-height: calc(100vh - 200px);
       background-color: #f5f5f5;
-      padding: 20px 0;
     }
   `]
 })
