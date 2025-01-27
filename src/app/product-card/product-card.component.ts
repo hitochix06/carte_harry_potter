@@ -22,6 +22,9 @@ import { Character } from '../Model/character.model';
           <p class="card-subtitle">{{ character.house.toUpperCase() }}</p>
 
           <div class="photo-frame">
+            <div class="price-tag">
+              {{ character.price | currency:'EUR':'symbol':'1.2-2' }}
+            </div>
             <div class="photo-container">
               <img [src]="character.image"
                    [alt]="character.name"
@@ -144,9 +147,8 @@ import { Character } from '../Model/character.model';
       padding: 10px;
       background: #fff;
       border: 1px solid rgba(0,0,0,0.2);
-      box-shadow:
-        0 0 0 1px rgba(0,0,0,0.1),
-        0 2px 6px rgba(0,0,0,0.2);
+      box-shadow: 0 0 0 1px rgba(0,0,0,0.1), 0 2px 6px rgba(0,0,0,0.2);
+      position: relative;
     }
 
     .photo-container {
@@ -250,6 +252,22 @@ import { Character } from '../Model/character.model';
       font-size: 120px;
       color: rgba(0,0,0,0.03);
       pointer-events: none;
+    }
+
+    .price-tag {
+      position: absolute;
+      top: -10px;
+      left: -15px;
+      z-index: 2;
+      background: rgba(0, 0, 0, 0.8);
+      color: #fff;
+      padding: 5px 10px;
+      border-radius: 15px;
+      font-family: 'Playfair Display', serif;
+      font-size: 16px;
+      font-weight: bold;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+      transform: rotate(-5deg);
     }
   `]
 })
