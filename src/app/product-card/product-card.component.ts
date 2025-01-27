@@ -7,8 +7,12 @@ import { Character } from '../Model/character.model';
   standalone: true,
   imports: [CommonModule],
   template: `
-    <div class="card-container">
-      <div class="identity-card" [ngStyle]="{'background-image': getHouseColor()}">
+    <div class="card-container"
+         (mousemove)="onMouseMove($event)"
+         (mouseleave)="onMouseLeave()">
+      <div class="identity-card"
+           [ngStyle]="{'background-image': getHouseColor(),
+                      'transform': transform}">
         <div class="vintage-texture"></div>
         <div class="card-content">
           <div class="card-header">
@@ -61,7 +65,6 @@ import { Character } from '../Model/character.model';
 
     .card-container {
       padding: 20px;
-      perspective: 1000px;
     }
 
     .identity-card {
@@ -71,7 +74,6 @@ import { Character } from '../Model/character.model';
       border-radius: 15px;
       position: relative;
       box-shadow: 0 8px 25px rgba(0,0,0,0.3);
-      transition: all 0.3s ease;
       overflow: hidden;
     }
 
@@ -85,6 +87,7 @@ import { Character } from '../Model/character.model';
       background-repeat: repeat;
       background-size: 200px;
       opacity: 0.5;
+      transform: translateZ(10px);
     }
 
     .card-content {
@@ -121,6 +124,7 @@ import { Character } from '../Model/character.model';
       width: 40px;
       height: 40px;
       opacity: 0.8;
+      transform: translateZ(20px);
     }
 
     .card-title {
@@ -132,6 +136,7 @@ import { Character } from '../Model/character.model';
       color: rgba(0,0,0,0.8);
       letter-spacing: 3px;
       text-transform: uppercase;
+      transform: translateZ(20px);
     }
 
     .card-subtitle {
@@ -141,6 +146,7 @@ import { Character } from '../Model/character.model';
       color: rgba(0,0,0,0.6);
       margin-bottom: 15px;
       letter-spacing: 1px;
+      transform: translateZ(20px);
     }
 
     .photo-frame {
@@ -175,6 +181,7 @@ import { Character } from '../Model/character.model';
       border-top: 1px solid rgba(0,0,0,0.2);
       padding-top: 10px;
       width: 80%;
+      transform: translateZ(20px);
     }
 
     .signature .name {
@@ -274,6 +281,7 @@ import { Character } from '../Model/character.model';
 export class ProductCardComponent {
   @Input({ required: true }) character!: Character;
   @Output() favoriteChange = new EventEmitter<Character>();
+  transform: string = '';
 
   getHouseColor(): string {
     const colors: { [key: string]: string } = {
@@ -292,5 +300,34 @@ export class ProductCardComponent {
 
   toggleFavorite(): void {
     this.favoriteChange.emit(this.character);
+  }
+
+  onMouseMove(e: MouseEvent): void {
+    const card = e.currentTarget as HTMLElement;
+    const rect = card.getBoundingClientRect();
+    const x = e.clientX - rect.left;
+    const y = e.clientY - rect.top;
+
+    const centerX = rect.width / 2;
+    const centerY = rect.height / 2;
+
+    const rotateX = ((y - centerY) / centerY) * -15;
+    const rotateY = ((x - centerX) / centerX) * 15;
+
+    this.transform = `
+      perspective(1000px)
+      rotateX(${rotateX}deg)
+      rotateY(${rotateY}deg)
+      scale3d(1.05, 1.05, 1.05)
+    `;
+  }
+
+  onMouseLeave(): void {
+    this.transform = `
+      perspective(1000px)
+      rotateX(0deg)
+      rotateY(0deg)
+      scale3d(1, 1, 1)
+    `;
   }
 }
