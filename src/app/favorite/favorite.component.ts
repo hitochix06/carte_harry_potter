@@ -5,7 +5,7 @@ import { ProductService } from '../product.service';
 import { Character } from '../Model/character.model';
 
 @Component({
-  selector: 'app-favorites',
+  selector: 'app-favorite',
   standalone: true,
   imports: [CommonModule, ProductCardComponent],
   template: `

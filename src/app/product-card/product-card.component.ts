@@ -39,8 +39,6 @@ import { Character } from '../Model/character.model';
               <span>MINISTRY OF MAGIC</span>
             </div>
           </div>
-
-          <div class="watermark">M</div>
         </div>
       </div>
 
