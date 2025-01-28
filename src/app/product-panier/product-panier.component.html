@@ -1,1 +1,15 @@
-<p>product-panier works!</p>
+<div>
+    <h1>Your Cart</h1>
+    <div *ngIf="cartItems.length === 0">Your cart is empty.</div>
+    <div *ngFor="let item of cartItems">
+      <p>{{ item.product.name }} - Quantity: {{ item.quantity }} - Price: {{ item.product.price }}€</p>
+    </div>
+    <h2>Total: {{ total }}€</h2>
+  
+    <form #orderForm="ngForm" (ngSubmit)="onSubmitOrder(orderForm.value)">
+      <input type="text" name="name" ngModel placeholder="Nom" required>
+      <input type="text" name="address" ngModel placeholder="adresse" required>
+      <button type="submit" [disabled]="orderForm.invalid">Commander</button>
+    </form>
+  </div>
+  

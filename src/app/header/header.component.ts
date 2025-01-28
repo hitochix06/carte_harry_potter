@@ -23,6 +23,11 @@ import { ProductService } from '../product.service';
             Favoris
             <span class="favorite-count" *ngIf="favoriteCount > 0">({{ favoriteCount }})</span>
           </a>
+          
+          <a routerLink="/cart" routerLinkActive="active" class="nav-link">
+            Panier
+          </a>
+
         </nav>
       </div>
     </header>
