@@ -10,4 +10,6 @@ export interface Character {
   createdDate: Date;
 
   image: string;
+
+  price: number;
 }

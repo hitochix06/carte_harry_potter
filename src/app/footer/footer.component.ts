@@ -35,7 +35,6 @@ import { CommonModule } from '@angular/common';
       background-color: #1a472a;
       color: #d3a625;
       padding: 2rem 0 1rem;
-      margin-top: 3rem;
     }
 
     .footer-content {
