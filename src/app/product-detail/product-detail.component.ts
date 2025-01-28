@@ -4,13 +4,16 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { Character } from '../Model/character.model';
 import { ProductService } from '../product.service';
 import { FormsModule } from '@angular/forms';
+import { NotificationService } from '../services/notification.service';
+import { NotificationComponent } from '../components/notification/notification.component';
 
 @Component({
   selector: 'app-product-detail',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, NotificationComponent],
   template: `
     <div class="detail-container" *ngIf="character">
+      <app-notification></app-notification>
       <button class="back-button" (click)="goBack()">
         <i class="fas fa-arrow-left"></i> Retour
       </button>
@@ -225,7 +228,8 @@ export class ProductDetailComponent implements OnInit {
   constructor(
     private route: ActivatedRoute,
     private router: Router,
-    private productService: ProductService
+    private productService: ProductService,
+    private notificationService: NotificationService
   ) {}
 
   ngOnInit() {
@@ -252,7 +256,13 @@ export class ProductDetailComponent implements OnInit {
   addToCart() {
     if (this.character) {
       this.productService.addToCart(this.character, this.quantity);
-      alert(`${this.character.name} ajouté au panier !`);
+      this.notificationService.show(
+        `${this.quantity} exemplaire${this.quantity > 1 ? 's' : ''} ajouté${
+          this.quantity > 1 ? 's' : ''
+        } au panier`,
+        this.character.name,
+        'success'
+      );
     }
   }
 }
