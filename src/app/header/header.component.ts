@@ -167,7 +167,7 @@ import { faShoppingCart } from '@fortawesome/free-solid-svg-icons';
 
       .cart-link {
         position: relative;
-        padding-right: 20px;
+        margin-left: 10px;
       }
 
       .cart-badge {
