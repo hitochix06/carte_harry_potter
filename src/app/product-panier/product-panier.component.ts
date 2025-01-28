@@ -1,11 +1,31 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
+import { ProductService } from '../product.service';
+import { Character } from '../Model/character.model';
+import { FormsModule } from '@angular/forms';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-product-panier',
-  imports: [],
+  standalone: true,
+  imports: [CommonModule, FormsModule],
   templateUrl: './product-panier.component.html',
-  styleUrl: './product-panier.component.css'
+  styleUrls: ['./product-panier.component.css']
 })
-export class ProductPanierComponent {
+export class ProductPanierComponent implements OnInit {
+  cartItems: { product: Character, quantity: number }[] = [];
+  total: number = 0;
 
+  constructor(private productService: ProductService) {}
+
+  ngOnInit() {
+    this.cartItems = this.productService.getCartItems();
+    this.total = this.productService.calculateTotal();
+  }
+
+  onSubmitOrder(formValues: { name: string; address: string }) {
+    alert(`Commande passé par ${formValues.name}, livraison à ${formValues.address}`);
+    this.productService.clearCart();
+    this.cartItems = [];
+    this.total = 0;
+  }
 }

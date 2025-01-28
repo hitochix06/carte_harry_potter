@@ -187,14 +187,60 @@ export class ProductService {
       price: 20,
     },
   ];
-
   private charactersSubject = new BehaviorSubject<Character[]>(this.characters);
   private favoritesCountSubject = new BehaviorSubject<number>(0);
 
+  private cartItems: { product: Character, quantity: number }[] = [];
+
+
   constructor() {
     this.updateFavoritesCount();
+
+    // Charger les données du panier depuis localStorage au démarrage
+    if (this.localStorageAvailable) {
+      const storedCart = window.localStorage.getItem('cart');
+      if (storedCart) {
+        this.cartItems = JSON.parse(storedCart);
+      }
+    }
   }
 
+  private get localStorageAvailable(): boolean {
+    return typeof window !== 'undefined' && !!window.localStorage;
+  }
+
+  private saveCartToLocalStorage() {
+    if (this.localStorageAvailable) {
+      window.localStorage.setItem('cart', JSON.stringify(this.cartItems));
+    }
+  }
+
+  // Méthode pour ajouter un produit au panier
+  addToCart(product: Character, quantity: number): void {
+    const existingItem = this.cartItems.find(item => item.product.id === product.id);
+    if (existingItem) {
+      existingItem.quantity += quantity;
+    } else {
+      this.cartItems.push({ product, quantity });
+    }
+    this.saveCartToLocalStorage();
+  }
+
+  // Méthode pour obtenir les éléments du panier
+  getCartItems(): { product: Character, quantity: number }[] {
+    return this.cartItems;
+  }
+
+  // Méthode pour calculer le total du panier
+  calculateTotal(): number {
+    return this.cartItems.reduce((total, item) => total + item.product.price * item.quantity, 0);
+  }
+
+  // Méthode pour vider le panier
+  clearCart(): void {
+    this.cartItems = [];
+    this.saveCartToLocalStorage();
+  }
   // Obtenir tous les personnages
   getProducts(): Character[] {
     return this.characters;

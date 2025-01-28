@@ -1,1 +1,36 @@
-<p>product-panier works!</p>
+<div class="cart-container">
+    <h1>Votre panier</h1>
+    <div class="cart-empty" *ngIf="cartItems.length === 0">
+      Votre panier est vide.
+    </div>
+  
+    <div class="cart-items" *ngFor="let item of cartItems">
+      <div class="cart-item">
+        <div class="item-details">
+          <span class="item-name">{{ item.product.name }}</span>
+          <span class="item-quantity">Quantité : {{ item.quantity }}</span>
+          <span class="item-price">Prix : {{ item.product.price }} €</span>
+        </div>
+      </div>
+    </div>
+  
+    <div class="cart-total">
+      <h2>Total : {{ total }} €</h2>
+    </div>
+  
+    <form #orderForm="ngForm" (ngSubmit)="onSubmitOrder(orderForm.value)" class="order-form">
+      <h2>Passer une commande</h2>
+      <div class="form-group">
+        <label for="name">Nom :</label>
+        <input id="name" type="text" name="name" ngModel placeholder="Entrez votre nom" required>
+      </div>
+      <div class="form-group">
+        <label for="address">Adresse :</label>
+        <input id="address" type="text" name="address" ngModel placeholder="Entrez votre adresse" required>
+      </div>
+      <button type="submit" [disabled]="orderForm.invalid" class="submit-button">
+        Commander
+      </button>
+    </form>
+  </div>
+  
