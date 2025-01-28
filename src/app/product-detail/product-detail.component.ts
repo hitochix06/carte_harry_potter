@@ -3,11 +3,12 @@ import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Character } from '../Model/character.model';
 import { ProductService } from '../product.service';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-product-detail',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, FormsModule],
   template: `
     <div class="detail-container" *ngIf="character">
       <button class="back-button" (click)="goBack()">
@@ -52,6 +53,19 @@ import { ProductService } from '../product.service';
                   : 'Ajouter aux favoris'
               }}
             </button>
+            <div class="add-to-cart">
+              <label for="quantity-{{ character.id }}">Quantité :</label>
+              <input
+                id="quantity-{{ character.id }}"
+                type="number"
+                [(ngModel)]="quantity"
+                min="1"
+                max="100"
+              />
+              <button class="cart-button" (click)="addToCart()">
+                <i class="fas fa-shopping-cart"></i> Ajouter au panier
+              </button>
+            </div>
           </div>
         </div>
       </div>
@@ -168,6 +182,34 @@ import { ProductService } from '../product.service';
         color: white;
       }
 
+      .add-to-cart {
+        margin-top: 1.5rem;
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+      }
+
+      .add-to-cart input {
+        width: 80px;
+        padding: 0.5rem;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+      }
+
+      .cart-button {
+        background: #1a472a;
+        color: white;
+        border: none;
+        padding: 0.5rem 1rem;
+        border-radius: 20px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+      }
+
+      .cart-button:hover {
+        background: #2a573a;
+      }
+
       @media (max-width: 768px) {
         .detail-content {
           grid-template-columns: 1fr;
@@ -178,6 +220,7 @@ import { ProductService } from '../product.service';
 })
 export class ProductDetailComponent implements OnInit {
   character: Character | undefined;
+  quantity: number = 1;
 
   constructor(
     private route: ActivatedRoute,
@@ -203,6 +246,12 @@ export class ProductDetailComponent implements OnInit {
   toggleFavorite() {
     if (this.character) {
       this.productService.toggleFavorite(this.character);
+    }
+  }
+
+  addToCart() {
+    if (this.character) {
+      console.log(`Ajout de ${this.quantity} ${this.character.name} au panier`);
     }
   }
 }
