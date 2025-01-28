@@ -1,11 +1,189 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { ActivatedRoute, Router } from '@angular/router';
+import { Character } from '../Model/character.model';
 
 @Component({
   selector: 'app-product-detail',
-  imports: [],
-  templateUrl: './product-detail.component.html',
-  styleUrl: './product-detail.component.css'
-})
-export class ProductDetailComponent {
+  standalone: true,
+  imports: [CommonModule],
+  template: `
+    <div class="detail-container" *ngIf="character">
+      <button class="back-button" (click)="goBack()">
+        <i class="fas fa-arrow-left"></i> Retour
+      </button>
 
+      <div class="detail-content">
+        <div class="left-section">
+          <img
+            [src]="character.image"
+            [alt]="character.name"
+            class="character-image"
+          />
+          <div class="price">
+            {{ character.price | currency : 'EUR' : 'symbol' : '1.2-2' }}
+          </div>
+        </div>
+
+        <div class="right-section">
+          <h1>{{ character.name }}</h1>
+          <div
+            class="house-badge"
+            [ngClass]="character.houseColor.toLowerCase()"
+          >
+            {{ character.houseColor }}
+          </div>
+
+          <div class="character-info">
+            <p class="id">
+              ID: #{{ character.id.toString().padStart(6, '0') }}
+            </p>
+            <button class="favorite-button" (click)="toggleFavorite()">
+              <i
+                [class]="character.isFavorite ? 'fas fa-heart' : 'far fa-heart'"
+              ></i>
+              {{
+                character.isFavorite
+                  ? 'Retirer des favoris'
+                  : 'Ajouter aux favoris'
+              }}
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  `,
+  styles: [
+    `
+      .detail-container {
+        padding: 2rem;
+        max-width: 1200px;
+        margin: 0 auto;
+      }
+
+      .back-button {
+        background: none;
+        border: none;
+        padding: 1rem;
+        cursor: pointer;
+        font-size: 1.1rem;
+        color: #333;
+        margin-bottom: 2rem;
+      }
+
+      .detail-content {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 2rem;
+        background: white;
+        border-radius: 15px;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        overflow: hidden;
+      }
+
+      .left-section {
+        position: relative;
+      }
+
+      .character-image {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
+
+      .price {
+        position: absolute;
+        top: 1rem;
+        right: 1rem;
+        background: rgba(0, 0, 0, 0.8);
+        color: white;
+        padding: 0.5rem 1rem;
+        border-radius: 20px;
+        font-weight: bold;
+      }
+
+      .right-section {
+        padding: 2rem;
+      }
+
+      h1 {
+        font-family: 'Playfair Display', serif;
+        font-size: 2.5rem;
+        margin-bottom: 1rem;
+      }
+
+      .house-badge {
+        display: inline-block;
+        padding: 0.5rem 1rem;
+        border-radius: 20px;
+        color: white;
+        margin-bottom: 1rem;
+      }
+
+      .gryffondor {
+        background: #740001;
+      }
+      .serpentard {
+        background: #1a472a;
+      }
+      .serdaigle {
+        background: #0e1a40;
+      }
+      .poufsouffle {
+        background: #ecb939;
+      }
+
+      .character-info {
+        margin-top: 2rem;
+      }
+
+      .id {
+        font-family: 'Courier New', monospace;
+        color: #666;
+        margin-bottom: 1rem;
+      }
+
+      .favorite-button {
+        background: none;
+        border: 2px solid #740001;
+        padding: 0.5rem 1rem;
+        border-radius: 20px;
+        color: #740001;
+        cursor: pointer;
+        transition: all 0.3s ease;
+      }
+
+      .favorite-button:hover {
+        background: #740001;
+        color: white;
+      }
+
+      @media (max-width: 768px) {
+        .detail-content {
+          grid-template-columns: 1fr;
+        }
+      }
+    `,
+  ],
+})
+export class ProductDetailComponent implements OnInit {
+  character: Character | undefined;
+
+  constructor(private route: ActivatedRoute, private router: Router) {}
+
+  ngOnInit() {
+    // Ici, vous devrez implémenter la récupération du personnage
+    // soit via un service, soit via les paramètres de route
+  }
+
+  goBack() {
+    this.router.navigate(['/']);
+  }
+
+  toggleFavorite() {
+    if (this.character) {
+      this.character.isFavorite = !this.character.isFavorite;
+      // Implémenter la logique de mise à jour avec votre service
+    }
+  }
 }
