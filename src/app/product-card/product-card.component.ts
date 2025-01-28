@@ -68,6 +68,11 @@ import { Router } from '@angular/router';
         perspective: 2000px;
         padding: 20px;
         position: relative;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 100%;
+        width: 100%;
       }
 
       .identity-card {
@@ -80,6 +85,7 @@ import { Router } from '@angular/router';
         padding: 20px;
         color: #fff;
         transition: all 0.5s cubic-bezier(0.23, 1, 0.32, 1);
+        margin: 0 auto;
       }
 
       .identity-card::before {
@@ -336,21 +342,127 @@ import { Router } from '@angular/router';
         }
       }
 
-      @media (max-width: 768px) {
+      @media (max-width: 1200px) {
         .identity-card {
-          width: 280px;
+          width: 290px;
         }
         .character-image {
-          height: 240px;
+          height: 260px;
+        }
+        .character-name {
+          font-size: 1.6rem;
+        }
+      }
+
+      @media (max-width: 768px) {
+        .card-container {
+          padding: 15px;
+        }
+
+        .identity-card {
+          width: 260px;
+          padding: 15px;
+        }
+
+        .character-image {
+          height: 230px;
+        }
+
+        .character-name {
+          font-size: 1.4rem;
+        }
+
+        .house-badge {
+          width: 40px;
+          height: 40px;
+        }
+
+        .house-icon {
+          width: 28px;
+          height: 28px;
+        }
+
+        .price {
+          font-size: 1.2rem;
+        }
+
+        .details-button {
+          padding: 10px 20px;
+          font-size: 0.9rem;
         }
       }
 
       @media (max-width: 480px) {
-        .identity-card {
-          width: 260px;
+        .card-container {
+          padding: 10px;
+          min-height: auto;
         }
+
+        .identity-card {
+          width: 100%;
+          max-width: 240px;
+          padding: 12px;
+          margin: 0 auto;
+        }
+
         .character-image {
-          height: 220px;
+          height: 200px;
+          margin-bottom: 15px;
+        }
+
+        .character-name {
+          font-size: 1.2rem;
+        }
+
+        .character-id {
+          font-size: 0.8rem;
+        }
+
+        .house-name {
+          font-size: 1rem;
+        }
+
+        .house-badge {
+          width: 35px;
+          height: 35px;
+          bottom: 10px;
+          left: 10px;
+        }
+
+        .house-icon {
+          width: 24px;
+          height: 24px;
+        }
+
+        .favorite-button {
+          width: 35px;
+          height: 35px;
+          top: 10px;
+          right: 10px;
+        }
+
+        .card-footer {
+          margin-top: 15px;
+          padding-top: 12px;
+        }
+
+        .price {
+          font-size: 1.1rem;
+        }
+
+        .details-button {
+          padding: 8px 16px;
+          font-size: 0.85rem;
+        }
+      }
+
+      @media (max-width: 360px) {
+        .identity-card {
+          max-width: 220px;
+        }
+
+        .character-image {
+          height: 180px;
         }
       }
     `,
