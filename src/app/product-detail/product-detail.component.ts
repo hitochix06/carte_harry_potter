@@ -251,7 +251,8 @@ export class ProductDetailComponent implements OnInit {
 
   addToCart() {
     if (this.character) {
-      console.log(`Ajout de ${this.quantity} ${this.character.name} au panier`);
+      this.productService.addToCart(this.character, this.quantity);
+      alert(`${this.character.name} ajouté au panier !`);
     }
   }
 }

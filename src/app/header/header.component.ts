@@ -45,6 +45,9 @@ import { ProductService } from '../product.service';
               >({{ favoriteCount }})</span
             >
           </a>
+          <a routerLink="/cart" routerLinkActive="active" class="nav-link">
+            Panier
+          </a>
         </nav>
       </div>
     </header>
