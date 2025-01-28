@@ -66,11 +66,16 @@ import { Character } from '../Model/character.model';
 
       .card-container {
         padding: 20px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
       }
 
       .identity-card {
-        width: 300px;
-        height: 420px;
+        width: 100%;
+        max-width: 300px;
+        height: auto;
+        aspect-ratio: 3/4.2;
         background: #f8f5e6;
         border-radius: 15px;
         position: relative;
@@ -130,7 +135,7 @@ import { Character } from '../Model/character.model';
 
       .card-title {
         font-family: 'Playfair Display', serif;
-        font-size: 24px;
+        font-size: clamp(18px, 4vw, 24px);
         font-weight: 700;
         text-align: center;
         margin: 10px 0;
@@ -150,17 +155,10 @@ import { Character } from '../Model/character.model';
         transform: translateZ(20px);
       }
 
-      .photo-frame {
-        padding: 10px;
-        background: #fff;
-        border: 1px solid rgba(0, 0, 0, 0.2);
-        box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.1), 0 2px 6px rgba(0, 0, 0, 0.2);
-        position: relative;
-      }
-
       .photo-container {
-        width: 180px;
-        height: 180px;
+        width: 60%;
+        max-width: 180px;
+        aspect-ratio: 1/1;
         overflow: hidden;
         border: 1px solid rgba(0, 0, 0, 0.3);
       }
@@ -187,7 +185,7 @@ import { Character } from '../Model/character.model';
 
       .signature .name {
         font-family: 'Playfair Display', serif;
-        font-size: 24px;
+        font-size: clamp(18px, 4vw, 24px);
         margin-bottom: 5px;
         color: rgba(0, 0, 0, 0.8);
       }
@@ -264,17 +262,57 @@ import { Character } from '../Model/character.model';
 
       .price-tag {
         position: absolute;
-        top: 155px;
-        left: 32px;
+        top: 37%;
+        left: 12%;
         z-index: 2;
         background: rgba(0, 0, 0, 0.8);
         color: #fff;
         padding: 5px 10px;
         border-radius: 15px;
         font-family: 'Playfair Display', serif;
-        font-size: 17px;
+        font-size: clamp(14px, 3vw, 17px);
         box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
         transform: rotate(-20deg);
+      }
+
+      @media (max-width: 768px) {
+        .card-container {
+          padding: 10px;
+        }
+
+        .card-number {
+          font-size: 0.8em;
+        }
+
+        .ministry-logo {
+          width: 30px;
+          height: 30px;
+        }
+
+        .card-subtitle {
+          font-size: 10px;
+        }
+
+        .signature small {
+          font-size: 8px;
+        }
+
+        .stamp {
+          width: 50px;
+          height: 50px;
+          bottom: 60px;
+          right: 20px;
+        }
+
+        .stamp-inner {
+          font-size: 6px;
+        }
+      }
+
+      @media (max-width: 480px) {
+        .identity-card {
+          max-width: 250px;
+        }
       }
     `,
   ],
