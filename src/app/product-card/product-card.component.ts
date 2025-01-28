@@ -210,8 +210,8 @@ import { Character } from '../Model/character.model';
 
       .stamp {
         position: absolute;
-        bottom: 30px;
-        right: 30px;
+        bottom: 68px;
+        right: 26px;
         width: 60px;
         height: 60px;
         border: 2px solid rgba(0,0,0,0.2);
@@ -221,6 +221,7 @@ import { Character } from '../Model/character.model';
         justify-content: center;
         transform: rotate(-15deg);
         opacity: 0.8;
+
       }
 
       .stamp-inner {
