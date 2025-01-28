@@ -53,6 +53,10 @@ import { Character } from '../Model/character.model';
             <small>Signature of Holder</small>
           </div>
 
+          <button class="details-button" (click)="onDetailsClick()">
+            Voir détails
+          </button>
+
           <div class="stamp">
             <div class="stamp-inner">MINISTRY OF MAGIC</div>
           </div>
@@ -275,6 +279,28 @@ import { Character } from '../Model/character.model';
         transform: rotate(-20deg);
       }
 
+      .details-button {
+        position: absolute;
+        bottom: 21%;
+        left: 50%;
+        transform: translateX(-50%) translateZ(20px);
+        padding: 8px 16px;
+        background: rgba(0, 0, 0, 0.8);
+        color: #fff;
+        border: none;
+        border-radius: 20px;
+        font-family: 'Playfair Display', serif;
+        font-size: 14px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        z-index: 2;
+      }
+
+      .details-button:hover {
+        background: rgba(0, 0, 0, 0.9);
+        transform: translateX(-50%) translateZ(20px) scale(1.05);
+      }
+
       @media (max-width: 768px) {
         .card-container {
           padding: 10px;
@@ -320,6 +346,7 @@ import { Character } from '../Model/character.model';
 export class ProductCardComponent {
   @Input({ required: true }) character!: Character;
   @Output() favoriteChange = new EventEmitter<Character>();
+  @Output() detailsClick = new EventEmitter<Character>();
   transform: string = '';
 
   getHouseColor(): string {
@@ -368,5 +395,9 @@ export class ProductCardComponent {
       rotateY(0deg)
       scale3d(1, 1, 1)
     `;
+  }
+
+  onDetailsClick(): void {
+    this.detailsClick.emit(this.character);
   }
 }
