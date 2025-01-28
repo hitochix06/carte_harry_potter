@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Character } from '../Model/character.model';
+import { ProductService } from '../product.service';
 
 @Component({
   selector: 'app-product-detail',
@@ -37,6 +38,9 @@ import { Character } from '../Model/character.model';
           <div class="character-info">
             <p class="id">
               ID: #{{ character.id.toString().padStart(6, '0') }}
+            </p>
+            <p class="date">
+              Date anniversaire: {{ character.createdAt | date : 'dd/MM/yyyy' }}
             </p>
             <button class="favorite-button" (click)="toggleFavorite()">
               <i
@@ -143,6 +147,12 @@ import { Character } from '../Model/character.model';
         margin-bottom: 1rem;
       }
 
+      .date {
+        font-family: 'Courier New', monospace;
+        color: #666;
+        margin-bottom: 1rem;
+      }
+
       .favorite-button {
         background: none;
         border: 2px solid #740001;
@@ -169,26 +179,30 @@ import { Character } from '../Model/character.model';
 export class ProductDetailComponent implements OnInit {
   character: Character | undefined;
 
-  constructor(private route: ActivatedRoute, private router: Router) {
+  constructor(
+    private route: ActivatedRoute,
+    private router: Router,
+    private productService: ProductService
+  ) {}
+
+  ngOnInit() {
     this.route.params.subscribe((params) => {
-      const id = params['id'];
-      // Charger les détails du personnage avec cet ID
+      const id = parseInt(params['id'], 10);
+      this.character = this.productService.getProduct(id);
+
+      if (!this.character) {
+        this.router.navigate(['/']);
+      }
     });
   }
 
-  ngOnInit() {
-    // Ici, vous devrez implémenter la récupération du personnage
-    // soit via un service, soit via les paramètres de route
-  }
-
   goBack() {
-    this.router.navigate(['/']);
+    this.router.navigate(['/products-list']);
   }
 
   toggleFavorite() {
     if (this.character) {
-      this.character.isFavorite = !this.character.isFavorite;
-      // Implémenter la logique de mise à jour avec votre service
+      this.productService.toggleFavorite(this.character);
     }
   }
 }

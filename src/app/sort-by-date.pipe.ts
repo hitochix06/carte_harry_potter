@@ -10,8 +10,8 @@ export class SortByDatePipe implements PipeTransform {
     if (!characters) return [];
 
     return [...characters].sort((a, b) => {
-      const dateA = new Date(a.createdDate).getTime();
-      const dateB = new Date(b.createdDate).getTime();
+      const dateA = new Date(a.createdAt).getTime();
+      const dateB = new Date(b.createdAt).getTime();
       return ascending ? dateA - dateB : dateB - dateA;
     });
   }

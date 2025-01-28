@@ -14,7 +14,7 @@ export class SearchPipe implements PipeTransform {
     searchTerm = searchTerm.toLowerCase().trim();
 
     return characters.filter((character) => {
-      const dateStr = character.createdDate.toLocaleDateString();
+      const dateStr = character.createdAt.toLocaleDateString();
 
       return (
         character.name.toLowerCase().includes(searchTerm) ||

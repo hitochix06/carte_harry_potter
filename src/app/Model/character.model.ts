@@ -3,7 +3,7 @@ export interface Character {
   name: string;
   houseColor: string;
   isFavorite: boolean;
-  createdDate: Date;
+  createdAt: Date;
   image: string;
   price: number;
 }
