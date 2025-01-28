@@ -1,12 +1,14 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink, RouterLinkActive } from '@angular/router';
 import { ProductService } from '../product.service';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import { faShoppingCart } from '@fortawesome/free-solid-svg-icons';
 
 @Component({
   selector: 'app-header',
   standalone: true,
-  imports: [CommonModule, RouterLink, RouterLinkActive],
+  imports: [CommonModule, RouterLink, RouterLinkActive, FontAwesomeModule],
   template: `
     <header class="header">
       <div class="header-content">
@@ -45,8 +47,15 @@ import { ProductService } from '../product.service';
               >({{ favoriteCount }})</span
             >
           </a>
-          <a routerLink="/cart" routerLinkActive="active" class="nav-link">
-            Panier
+          <a
+            routerLink="/cart"
+            routerLinkActive="active"
+            class="nav-link cart-link"
+          >
+            <fa-icon [icon]="cartIcon"></fa-icon>
+            <span *ngIf="cartItemCount > 0" class="cart-badge">
+              {{ cartItemCount }}
+            </span>
           </a>
         </nav>
       </div>
@@ -156,6 +165,29 @@ import { ProductService } from '../product.service';
         transform: translateY(8px);
       }
 
+      .cart-link {
+        position: relative;
+        padding-right: 20px;
+      }
+
+      .cart-badge {
+        position: absolute;
+        top: -8px;
+        right: -8px;
+        background-color: #ffd700;
+        color: #740001;
+        border-radius: 50%;
+        padding: 2px 6px;
+        font-size: 0.8rem;
+        font-weight: bold;
+        min-width: 20px;
+        height: 20px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+      }
+
       @media screen and (max-width: 768px) {
         .menu-toggle {
           display: block;
@@ -228,17 +260,34 @@ import { ProductService } from '../product.service';
         .menu-toggle.active .hamburger::after {
           transform: rotate(-45deg);
         }
+
+        .cart-badge {
+          top: 10px;
+          right: -15px;
+        }
+      }
+
+      fa-icon {
+        margin-right: 0.5rem;
       }
     `,
   ],
 })
-export class HeaderComponent {
+export class HeaderComponent implements OnInit {
   favoriteCount: number = 0;
   isMenuOpen: boolean = false;
+  cartItemCount: number = 0;
+  cartIcon = faShoppingCart;
 
   constructor(private productService: ProductService) {
     this.productService.getFavoritesCount().subscribe((count) => {
       this.favoriteCount = count;
+    });
+  }
+
+  ngOnInit() {
+    this.productService.getCartItemCount().subscribe((count) => {
+      this.cartItemCount = count;
     });
   }
 

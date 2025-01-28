@@ -191,15 +191,17 @@ export class ProductService {
   private favoritesCountSubject = new BehaviorSubject<number>(0);
 
   private cartItems: { product: Character; quantity: number }[] = [];
+  private cartItemCountSubject = new BehaviorSubject<number>(0);
 
   constructor() {
     this.updateFavoritesCount();
 
     // Charger les données du panier depuis localStorage au démarrage
     if (this.localStorageAvailable) {
-      const storedCart = window.localStorage.getItem('cart');
-      if (storedCart) {
-        this.cartItems = JSON.parse(storedCart);
+      const savedCart = window.localStorage.getItem('cart');
+      if (savedCart) {
+        this.cartItems = JSON.parse(savedCart);
+        this.updateCartItemCount();
       }
     }
   }
@@ -225,6 +227,7 @@ export class ProductService {
       this.cartItems.push({ product, quantity });
     }
     this.saveCartToLocalStorage();
+    this.updateCartItemCount();
   }
 
   // Méthode pour obtenir les éléments du panier
@@ -244,7 +247,9 @@ export class ProductService {
   clearCart(): void {
     this.cartItems = [];
     this.saveCartToLocalStorage();
+    this.updateCartItemCount();
   }
+
   // Obtenir tous les personnages
   getProducts(): Character[] {
     return this.characters;
@@ -322,6 +327,7 @@ export class ProductService {
     if (existingItem) {
       existingItem.quantity = quantity;
       this.saveCartToLocalStorage();
+      this.updateCartItemCount();
     }
   }
 
@@ -330,5 +336,20 @@ export class ProductService {
       (item) => item.product.id !== product.id
     );
     this.saveCartToLocalStorage();
+    this.updateCartItemCount();
+  }
+
+  // Ajouter cette méthode pour obtenir le nombre d'articles
+  getCartItemCount(): Observable<number> {
+    return this.cartItemCountSubject.asObservable();
+  }
+
+  // Mettre à jour cette méthode pour mettre à jour le compteur
+  private updateCartItemCount(): void {
+    const count = this.cartItems.reduce(
+      (total, item) => total + item.quantity,
+      0
+    );
+    this.cartItemCountSubject.next(count);
   }
 }
