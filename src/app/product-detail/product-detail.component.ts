@@ -5,7 +5,7 @@ import { Character } from '../Model/character.model';
 import { ProductService } from '../product.service';
 import { FormsModule } from '@angular/forms';
 import { NotificationService } from '../services/notification.service';
-import { NotificationComponent } from '../components/notification/notification.component';
+import { NotificationComponent } from '../notification/notification.component';
 
 @Component({
   selector: 'app-product-detail',
