@@ -65,48 +65,52 @@ import { Router } from '@angular/router';
   styles: [
     `
       .card-container {
-        perspective: 1000px;
+        perspective: 2000px;
         padding: 20px;
+        position: relative;
       }
 
       .identity-card {
         width: 300px;
         position: relative;
-        border-radius: 24px;
-        background: #f0f0f0;
-        box-shadow: 20px 20px 60px #bebebe, -20px -20px 60px #ffffff;
-        transition: all 0.3s ease;
+        border-radius: 15px;
+        background: #1a1a24;
+        border: 3px solid transparent;
+        background-clip: padding-box;
         padding: 20px;
+        color: #fff;
+        transition: all 0.5s cubic-bezier(0.23, 1, 0.32, 1);
       }
 
-      .favorite-button {
+      .identity-card::before {
+        content: '';
         position: absolute;
-        top: 15px;
-        right: 15px;
-        background: #ffffff;
-        border: none;
-        padding: 10px;
-        border-radius: 50%;
-        cursor: pointer;
-        box-shadow: 5px 5px 10px #bebebe, -5px -5px 10px #ffffff;
-        z-index: 10;
-        transition: all 0.3s ease;
+        inset: -3px;
+        z-index: -1;
+        border-radius: 15px;
+        background: linear-gradient(
+          45deg,
+          #ffd700,
+          #c0a45e,
+          #4a4a4a,
+          #c0a45e,
+          #ffd700
+        );
+        background-size: 400% 400%;
+        animation: gradientMove 15s ease infinite;
+        filter: blur(4px);
       }
 
-      .favorite-button i {
-        color: #ff4757;
-        font-size: 1.2rem;
-      }
-
-      .favorite-button:hover {
-        transform: scale(1.1);
+      .identity-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
       }
 
       .character-image {
         position: relative;
         width: 100%;
-        height: 250px;
-        border-radius: 16px;
+        height: 280px;
+        border-radius: 12px;
         overflow: hidden;
         margin-bottom: 20px;
       }
@@ -115,124 +119,229 @@ import { Router } from '@angular/router';
         width: 100%;
         height: 100%;
         object-fit: cover;
-        transition: transform 0.3s ease;
+        transition: all 0.5s ease;
+        filter: sepia(0.2);
+      }
+
+      .character-image::after {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(
+          to bottom,
+          rgba(26, 26, 36, 0) 0%,
+          rgba(26, 26, 36, 0.8) 100%
+        );
       }
 
       .character-image:hover .character-photo {
-        transform: scale(1.05);
+        transform: scale(1.1);
+        filter: sepia(0);
       }
 
       .house-badge {
         position: absolute;
-        bottom: 10px;
-        left: 10px;
-        width: 40px;
-        height: 40px;
+        bottom: 15px;
+        left: 15px;
+        width: 50px;
+        height: 50px;
         border-radius: 50%;
+        z-index: 2;
         display: flex;
         align-items: center;
         justify-content: center;
-        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+        animation: magicFloat 6s ease-in-out infinite;
       }
 
       .house-icon {
-        width: 25px;
-        height: 25px;
-        object-fit: contain;
+        width: 35px;
+        height: 35px;
+        filter: drop-shadow(0 0 5px rgba(255, 255, 255, 0.7));
+        animation: magicSpin 20s linear infinite;
       }
 
       .gryffondor {
-        background: linear-gradient(135deg, #740001, #d3a625);
+        background: radial-gradient(circle at 30% 30%, #d3a625, #740001);
+        border: 2px solid #ffd700;
       }
       .serpentard {
-        background: linear-gradient(135deg, #1a472a, #2a623d);
+        background: radial-gradient(circle at 30% 30%, #2a623d, #1a472a);
+        border: 2px solid #silver;
       }
       .serdaigle {
-        background: linear-gradient(135deg, #0e1a40, #222f5b);
+        background: radial-gradient(circle at 30% 30%, #222f5b, #0e1a40);
+        border: 2px solid #bronze;
       }
       .poufsouffle {
-        background: linear-gradient(135deg, #ecb939, #f0c75e);
+        background: radial-gradient(circle at 30% 30%, #f0c75e, #ecb939);
+        border: 2px solid #000000;
       }
 
-      .card-content {
-        padding: 10px 0;
+      .favorite-button {
+        position: absolute;
+        top: 15px;
+        right: 15px;
+        z-index: 10;
+        width: 40px;
+        height: 40px;
+        background: rgba(255, 255, 255, 0.1);
+        backdrop-filter: blur(5px);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        border-radius: 50%;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.4s ease;
       }
 
-      .character-info {
-        text-align: left;
-        margin-bottom: 20px;
+      .favorite-button i {
+        color: #ff4757;
+        font-size: 1.2rem;
+        transition: all 0.4s ease;
+      }
+
+      .favorite-button:hover {
+        transform: scale(1.15);
+        background: rgba(255, 71, 87, 0.2);
+      }
+
+      .favorite-button:hover i {
+        transform: scale(1.2);
+        filter: drop-shadow(0 0 5px rgba(255, 71, 87, 0.8));
       }
 
       .character-name {
-        font-size: 1.5rem;
-        font-weight: 600;
-        color: #2d3436;
+        font-family: 'Playfair Display', serif;
+        font-size: 1.8rem;
+        font-weight: 700;
+        background: linear-gradient(45deg, #ffd700, #ffffff);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
         margin: 0;
         line-height: 1.2;
+        position: relative;
       }
 
       .character-id {
-        font-size: 0.8rem;
-        color: #636e72;
-        display: block;
-        margin-top: 5px;
+        font-family: 'Courier Prime', monospace;
+        font-size: 0.9rem;
+        color: #888;
+        letter-spacing: 2px;
+        margin-top: 8px;
       }
 
       .house-name {
-        font-size: 0.9rem;
-        color: #636e72;
-        margin-top: 5px;
+        font-size: 1.1rem;
+        font-family: 'Crimson Text', serif;
+        color: #c0a45e;
+        margin-top: 8px;
+        font-style: italic;
+        text-shadow: 0 0 10px rgba(192, 164, 94, 0.3);
       }
 
       .card-footer {
         display: flex;
         justify-content: space-between;
         align-items: center;
-        margin-top: 20px;
+        margin-top: 25px;
+        padding-top: 15px;
+        border-top: 1px solid rgba(192, 164, 94, 0.3);
       }
 
       .price {
-        font-size: 1.2rem;
-        font-weight: 600;
-        color: #2d3436;
+        font-size: 1.4rem;
+        font-weight: 700;
+        background: linear-gradient(45deg, #ffd700, #c0a45e);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
       }
 
       .details-button {
-        padding: 10px 20px;
+        padding: 12px 24px;
+        background: transparent;
         border: none;
-        border-radius: 12px;
-        background: #ffffff;
-        box-shadow: 5px 5px 10px #bebebe, -5px -5px 10px #ffffff;
-        color: #2d3436;
-        font-weight: 500;
+        position: relative;
+        color: #fff;
+        font-family: 'Playfair Display', serif;
+        font-size: 1rem;
         cursor: pointer;
-        transition: all 0.3s ease;
-        display: flex;
-        align-items: center;
-        gap: 8px;
+        overflow: hidden;
+        transition: all 0.4s ease;
       }
 
-      .details-button:hover {
-        transform: translateY(-2px);
-        box-shadow: 8px 8px 15px #bebebe, -8px -8px 15px #ffffff;
+      .details-button::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(45deg, #ffd700, #c0a45e);
+        opacity: 0.2;
+        z-index: -1;
+        transition: all 0.4s ease;
+        transform: skewX(-15deg);
+      }
+
+      .details-button:hover::before {
+        transform: skewX(-15deg) scale(1.2);
+        opacity: 0.4;
       }
 
       .details-button i {
-        font-size: 0.9rem;
+        margin-left: 8px;
         transition: transform 0.3s ease;
       }
 
       .details-button:hover i {
-        transform: translateX(4px);
+        transform: translateX(5px);
+      }
+
+      @keyframes gradientMove {
+        0% {
+          background-position: 0% 50%;
+        }
+        50% {
+          background-position: 100% 50%;
+        }
+        100% {
+          background-position: 0% 50%;
+        }
+      }
+
+      @keyframes magicFloat {
+        0%,
+        100% {
+          transform: translateY(0) rotate(0deg);
+        }
+        25% {
+          transform: translateY(-8px) rotate(3deg);
+        }
+        75% {
+          transform: translateY(8px) rotate(-3deg);
+        }
+      }
+
+      @keyframes magicSpin {
+        0% {
+          transform: rotate(0deg);
+        }
+        100% {
+          transform: rotate(360deg);
+        }
       }
 
       @media (max-width: 768px) {
         .identity-card {
           width: 280px;
         }
-
         .character-image {
-          height: 220px;
+          height: 240px;
         }
       }
 
@@ -240,13 +349,8 @@ import { Router } from '@angular/router';
         .identity-card {
           width: 260px;
         }
-
         .character-image {
-          height: 200px;
-        }
-
-        .details-button {
-          padding: 8px 16px;
+          height: 220px;
         }
       }
     `,
