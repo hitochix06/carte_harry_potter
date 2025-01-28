@@ -1,6 +1,7 @@
 import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Character } from '../Model/character.model';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-product-card',
@@ -349,6 +350,8 @@ export class ProductCardComponent {
   @Output() detailsClick = new EventEmitter<Character>();
   transform: string = '';
 
+  constructor(private router: Router) {}
+
   getHouseColor(): string {
     const colors: { [key: string]: string } = {
       Gryffondor: 'linear-gradient(135deg, #740001 0%, #ae0001 100%)',
@@ -398,6 +401,6 @@ export class ProductCardComponent {
   }
 
   onDetailsClick(): void {
-    this.detailsClick.emit(this.character);
+    this.router.navigate(['/product-detail', this.character.id]);
   }
 }

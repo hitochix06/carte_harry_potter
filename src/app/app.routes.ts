@@ -7,7 +7,10 @@ import { ProductDetailComponent } from './product-detail/product-detail.componen
 export const routes: Routes = [
   { path: '', component: HomeComponent },
   { path: 'products-list', component: ProductSearchComponent },
+  {
+    path: 'product-detail/:id',
+    component: ProductDetailComponent,
+  },
   { path: 'favoris', component: FavoritesComponent },
-  { path: 'detail/:id', component: ProductDetailComponent },
   { path: '**', redirectTo: '' },
 ];

@@ -169,7 +169,12 @@ import { Character } from '../Model/character.model';
 export class ProductDetailComponent implements OnInit {
   character: Character | undefined;
 
-  constructor(private route: ActivatedRoute, private router: Router) {}
+  constructor(private route: ActivatedRoute, private router: Router) {
+    this.route.params.subscribe((params) => {
+      const id = params['id'];
+      // Charger les détails du personnage avec cet ID
+    });
+  }
 
   ngOnInit() {
     // Ici, vous devrez implémenter la récupération du personnage
