@@ -264,7 +264,7 @@ import { Character } from '../Model/character.model';
 
       .price-tag {
         position: absolute;
-        top: 135px;
+        top: 155px;
         left: 32px;
         z-index: 2;
         background: rgba(0, 0, 0, 0.8);
@@ -272,8 +272,7 @@ import { Character } from '../Model/character.model';
         padding: 5px 10px;
         border-radius: 15px;
         font-family: 'Playfair Display', serif;
-        font-size: 16px;
-        font-weight: bold;
+        font-size: 17px;
         box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
         transform: rotate(-20deg);
       }
