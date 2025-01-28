@@ -3,10 +3,16 @@ import { Character } from './Model/character.model';
 
 @Pipe({
   name: 'sortByDate',
-  standalone: true
+  standalone: true,
 })
 export class SortByDatePipe implements PipeTransform {
-  transform(character: Character, ascending: boolean = true): Character {
-    return character;
+  transform(characters: Character[], ascending: boolean = true): Character[] {
+    if (!characters) return [];
+
+    return [...characters].sort((a, b) => {
+      const dateA = new Date(a.createdDate).getTime();
+      const dateB = new Date(b.createdDate).getTime();
+      return ascending ? dateA - dateB : dateB - dateA;
+    });
   }
 }

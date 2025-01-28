@@ -7,12 +7,7 @@ import { FooterComponent } from './footer/footer.component';
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [
-    CommonModule,
-    RouterOutlet,
-    HeaderComponent,
-    FooterComponent
-  ],
+  imports: [CommonModule, RouterOutlet, HeaderComponent, FooterComponent],
   template: `
     <app-header></app-header>
 
@@ -22,11 +17,15 @@ import { FooterComponent } from './footer/footer.component';
 
     <app-footer></app-footer>
   `,
-  styles: [`
-    .main-content {
-      min-height: calc(100vh - 200px);
-      background-color: #f5f5f5;
-    }
-  `]
+  styles: [
+    `
+      .main-content {
+        min-height: calc(100vh - 200px);
+        background-color: #f5f5f5;
+      }
+    `,
+  ],
 })
-export class AppComponent {}
+export class AppComponent {
+  title = 'carte_harry_potter';
+}
