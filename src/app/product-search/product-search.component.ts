@@ -16,16 +16,9 @@ import { SearchPipe } from '../search.pipe';
         <input
           type="text"
           [(ngModel)]="searchTerm"
-          placeholder="Rechercher un personnage..."
+          placeholder="Rechercher un personnage... (Nom, prix, maison,)"
           class="search-input"
         />
-
-        <div class="sort-controls">
-          <select [(ngModel)]="sortType" class="sort-select">
-            <option value="name">Trier par nom</option>
-            <option value="date">Trier par date</option>
-          </select>
-        </div>
       </div>
 
       <div class="characters-grid">
@@ -50,7 +43,6 @@ import { SearchPipe } from '../search.pipe';
         justify-content: space-between;
         align-items: center;
         margin-bottom: 20px;
-        gap: 20px;
         background: white;
         padding: 1rem;
         border-radius: 8px;
@@ -58,36 +50,11 @@ import { SearchPipe } from '../search.pipe';
       }
 
       .search-input {
-        flex: 1;
+        width: 100%;
         padding: 10px;
         border: 1px solid #ccc;
         border-radius: 5px;
         font-size: 16px;
-      }
-
-      .sort-controls {
-        display: flex;
-        gap: 10px;
-      }
-
-      .sort-select {
-        padding: 8px;
-        border: 1px solid #ccc;
-        border-radius: 5px;
-        font-size: 14px;
-      }
-
-      .sort-direction-btn {
-        padding: 8px 12px;
-        border: 1px solid #ccc;
-        border-radius: 5px;
-        background: white;
-        cursor: pointer;
-        transition: background-color 0.2s;
-      }
-
-      .sort-direction-btn:hover {
-        background-color: #f0f0f0;
       }
 
       .characters-grid {
@@ -102,25 +69,11 @@ import { SearchPipe } from '../search.pipe';
 export class ProductSearchComponent implements OnInit {
   characters: Character[] = [];
   searchTerm: string = '';
-  sortType: 'name' | 'date' = 'name';
-  sortAscending: boolean = true;
 
   constructor(private productService: ProductService) {}
 
   ngOnInit() {
     this.characters = this.productService.getProducts();
-  }
-
-  toggleSortDirection() {
-    this.sortAscending = !this.sortAscending;
-  }
-
-  getSortedCharacters(): Character[] {
-    return this.productService.sortCharacters(
-      this.productService.searchCharacters(this.searchTerm),
-      this.sortType,
-      this.sortAscending
-    );
   }
 
   onFavoriteChange(character: Character) {
