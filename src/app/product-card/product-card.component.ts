@@ -230,7 +230,7 @@ import { Router } from '@angular/router';
       .character-id {
         font-family: 'Courier Prime', monospace;
         font-size: 0.9rem;
-        color: #888;
+        color: #fff;
         letter-spacing: 2px;
         margin-top: 8px;
       }
@@ -238,7 +238,7 @@ import { Router } from '@angular/router';
       .house-name {
         font-size: 1.1rem;
         font-family: 'Crimson Text', serif;
-        color: #c0a45e;
+        color: #fff;
         margin-top: 8px;
         font-style: italic;
         text-shadow: 0 0 10px rgba(192, 164, 94, 0.3);
