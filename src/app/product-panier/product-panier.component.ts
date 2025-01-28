@@ -31,8 +31,8 @@ import { NotificationService } from '../services/notification.service';
               class="text-center py-12 bg-white rounded-xl shadow-sm"
             >
               <img
-                src="assets/empty-cart.svg"
-                class="w-32 mx-auto mb-4"
+                src="assets/logoministry.png"
+                class="w-20 mx-auto mb-4"
                 alt="Panier vide"
               />
               <p class="text-gray-500">Votre panier est vide</p>

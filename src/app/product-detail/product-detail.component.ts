@@ -46,6 +46,39 @@ import { NotificationComponent } from '../notification/notification.component';
             <p class="date">
               Date anniversaire: {{ character.createdAt | date : 'dd/MM/yyyy' }}
             </p>
+
+            <div class="character-details">
+              <h2>Informations du personnage</h2>
+              <div class="info-grid">
+                <div class="info-item">
+                  <span class="label">Baguette magique :</span>
+                  <span class="value">{{ character.wand || 'Inconnue' }}</span>
+                </div>
+                <div class="info-item">
+                  <span class="label">Patronus :</span>
+                  <span class="value">{{
+                    character.patronus || 'Inconnu'
+                  }}</span>
+                </div>
+                <div class="info-item">
+                  <span class="label">Année à Poudlard :</span>
+                  <span class="value">{{ character.year || 'Inconnue' }}</span>
+                </div>
+                <div class="info-item">
+                  <span class="label">Rôle :</span>
+                  <span class="value">{{ character.role || 'Inconnu' }}</span>
+                </div>
+                <div class="info-item description">
+                  <span class="label">Description :</span>
+                  <p class="value">
+                    {{
+                      character.description || 'Aucune description disponible'
+                    }}
+                  </p>
+                </div>
+              </div>
+            </div>
+
             <button class="favorite-button" (click)="toggleFavorite()">
               <i
                 [class]="character.isFavorite ? 'fas fa-heart' : 'far fa-heart'"
@@ -213,9 +246,56 @@ import { NotificationComponent } from '../notification/notification.component';
         background: #2a573a;
       }
 
+      .character-details {
+        margin: 2rem 0;
+        padding: 1.5rem;
+        background: #f8f9fa;
+        border-radius: 10px;
+      }
+
+      .character-details h2 {
+        font-family: 'Playfair Display', serif;
+        font-size: 1.5rem;
+        margin-bottom: 1.5rem;
+        color: #333;
+      }
+
+      .info-grid {
+        display: grid;
+        gap: 1.2rem;
+      }
+
+      .info-item {
+        display: grid;
+        grid-template-columns: 150px 1fr;
+        gap: 1rem;
+      }
+
+      .info-item.description {
+        grid-template-columns: 1fr;
+      }
+
+      .label {
+        font-weight: 600;
+        color: #666;
+      }
+
+      .value {
+        color: #333;
+      }
+
+      .description .value {
+        margin-top: 0.5rem;
+        line-height: 1.6;
+      }
+
       @media (max-width: 768px) {
         .detail-content {
           grid-template-columns: 1fr;
+        }
+        .info-item {
+          grid-template-columns: 1fr;
+          gap: 0.3rem;
         }
       }
     `,
