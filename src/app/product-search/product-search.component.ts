@@ -4,12 +4,12 @@ import { Character } from '../Model/character.model';
 import { FormsModule } from '@angular/forms';
 import { ProductCardComponent } from '../product-card/product-card.component';
 import { CommonModule } from '@angular/common';
-
+import { SearchPipe } from '../search.pipe';
 
 @Component({
   selector: 'app-product-search',
   standalone: true,
-  imports: [CommonModule, FormsModule, ProductCardComponent],
+  imports: [CommonModule, FormsModule, ProductCardComponent, SearchPipe],
   template: `
     <div class="container">
       <div class="search-sort-container">
@@ -18,90 +18,87 @@ import { CommonModule } from '@angular/common';
           [(ngModel)]="searchTerm"
           placeholder="Rechercher un personnage..."
           class="search-input"
-        >
+        />
 
         <div class="sort-controls">
           <select [(ngModel)]="sortType" class="sort-select">
             <option value="name">Trier par nom</option>
             <option value="date">Trier par date</option>
           </select>
-
-          <button (click)="toggleSortDirection()" class="sort-direction-btn">
-            <i [class]="sortAscending ? 'fas fa-sort-up' : 'fas fa-sort-down'"></i>
-          </button>
         </div>
       </div>
 
       <div class="characters-grid">
         <app-product-card
-          *ngFor="let character of getSortedCharacters()"
+          *ngFor="let character of characters | search : searchTerm"
           [character]="character"
           (favoriteChange)="onFavoriteChange($event)"
         ></app-product-card>
       </div>
     </div>
   `,
-  styles: [`
-    .container {
-      max-width: 1200px;
-      margin: 0 auto;
-      padding: 20px;
-    }
+  styles: [
+    `
+      .container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 20px;
+      }
 
-    .search-sort-container {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 20px;
-      gap: 20px;
-      background: white;
-      padding: 1rem;
-      border-radius: 8px;
-      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-    }
+      .search-sort-container {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 20px;
+        gap: 20px;
+        background: white;
+        padding: 1rem;
+        border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      }
 
-    .search-input {
-      flex: 1;
-      padding: 10px;
-      border: 1px solid #ccc;
-      border-radius: 5px;
-      font-size: 16px;
-    }
+      .search-input {
+        flex: 1;
+        padding: 10px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        font-size: 16px;
+      }
 
-    .sort-controls {
-      display: flex;
-      gap: 10px;
-    }
+      .sort-controls {
+        display: flex;
+        gap: 10px;
+      }
 
-    .sort-select {
-      padding: 8px;
-      border: 1px solid #ccc;
-      border-radius: 5px;
-      font-size: 14px;
-    }
+      .sort-select {
+        padding: 8px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        font-size: 14px;
+      }
 
-    .sort-direction-btn {
-      padding: 8px 12px;
-      border: 1px solid #ccc;
-      border-radius: 5px;
-      background: white;
-      cursor: pointer;
-      transition: background-color 0.2s;
-    }
+      .sort-direction-btn {
+        padding: 8px 12px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        background: white;
+        cursor: pointer;
+        transition: background-color 0.2s;
+      }
 
-    .sort-direction-btn:hover {
-      background-color: #f0f0f0;
-    }
+      .sort-direction-btn:hover {
+        background-color: #f0f0f0;
+      }
 
-    .characters-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-      gap: 20px;
-      padding: 20px;
-    }
-  `]
+      .characters-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+        gap: 20px;
+        padding: 20px;
+      }
+    `,
+  ],
 })
-
 export class ProductSearchComponent implements OnInit {
   characters: Character[] = [];
   searchTerm: string = '';
@@ -129,6 +126,4 @@ export class ProductSearchComponent implements OnInit {
   onFavoriteChange(character: Character) {
     this.productService.toggleFavorite(character);
   }
-
 }
-
