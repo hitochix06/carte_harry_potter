@@ -16,6 +16,9 @@ import { ProductService } from '../product.service';
         </div>
         <nav class="navigation">
           <a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}" class="nav-link">Accueil</a>
+          <a routerLink="/products-list" routerLinkActive="active" class="nav-link">
+            Liste des personnages
+          </a>
           <a routerLink="/favoris" routerLinkActive="active" class="nav-link">
             Favoris
             <span class="favorite-count" *ngIf="favoriteCount > 0">({{ favoriteCount }})</span>
