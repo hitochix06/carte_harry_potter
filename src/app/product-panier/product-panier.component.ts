@@ -4,11 +4,15 @@ import { Character } from '../Model/character.model';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { NotificationService } from '../services/notification.service';
+import { MatDialog } from '@angular/material/dialog';
+import { OrderConfirmationDialogComponent } from '../order-confirmation-dialog/order-confirmation-dialog.component';
+import { MatDialogModule } from '@angular/material/dialog';
+import { NgForm } from '@angular/forms';
 
 @Component({
   selector: 'app-product-panier',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, MatDialogModule],
   template: `
     <div class="min-h-screen bg-gray-50">
       <div class="max-w-5xl mx-auto px-4 py-12">
@@ -142,7 +146,7 @@ import { NotificationService } from '../services/notification.service';
               <form
                 *ngIf="cartItems.length > 0"
                 #orderForm="ngForm"
-                (ngSubmit)="onSubmitOrder(orderForm.value)"
+                (ngSubmit)="onSubmitOrder(orderForm)"
                 class="space-y-4"
               >
                 <div>
@@ -155,6 +159,31 @@ import { NotificationService } from '../services/notification.service';
                     placeholder="Votre nom"
                     class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-gryffindor focus:border-gryffindor"
                   />
+                </div>
+
+                <div>
+                  <input
+                    type="email"
+                    id="email"
+                    name="email"
+                    ngModel
+                    required
+                    pattern="[^@]*@[^@]*"
+                    placeholder="Votre email"
+                    class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-gryffindor focus:border-gryffindor"
+                    #email="ngModel"
+                  />
+                  <div
+                    *ngIf="email.invalid && (email.dirty || email.touched)"
+                    class="text-red-500 text-sm mt-1"
+                  >
+                    <div *ngIf="email.errors?.['required']">
+                      L'email est requis
+                    </div>
+                    <div *ngIf="email.errors?.['pattern']">
+                      L'email doit contenir un &#64;
+                    </div>
+                  </div>
                 </div>
 
                 <div>
@@ -190,7 +219,8 @@ export class ProductPanierComponent implements OnInit {
 
   constructor(
     private productService: ProductService,
-    private notificationService: NotificationService
+    private notificationService: NotificationService,
+    private dialog: MatDialog
   ) {}
 
   ngOnInit() {
@@ -227,12 +257,25 @@ export class ProductPanierComponent implements OnInit {
     );
   }
 
-  onSubmitOrder(formValues: { name: string; address: string }) {
-    this.notificationService.show(
-      `Commande passée par ${formValues.name}, livraison à ${formValues.address}`,
-      'Commande confirmée',
-      'success'
-    );
+  onSubmitOrder(form: NgForm) {
+    if (form.invalid) {
+      this.notificationService.show(
+        'Veuillez remplir correctement tous les champs',
+        'Erreur',
+        'error'
+      );
+      return;
+    }
+
+    this.dialog.open(OrderConfirmationDialogComponent, {
+      width: '400px',
+      data: {
+        name: form.value.name,
+        address: form.value.address,
+        email: form.value.email,
+      },
+    });
+
     this.productService.clearCart();
     this.cartItems = [];
     this.total = 0;
