@@ -6,4 +6,9 @@ export interface Character {
   createdAt: Date;
   image: string;
   price: number;
+  wand?: string;
+  patronus?: string;
+  year?: number;
+  role?: string;
+  description?: string;
 }

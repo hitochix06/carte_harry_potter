@@ -13,53 +13,50 @@ import { Router } from '@angular/router';
       (mousemove)="onMouseMove($event)"
       (mouseleave)="onMouseLeave()"
     >
-      <div
-        class="identity-card"
-        [ngStyle]="{
-          'background-image': getHouseColor(),
-          transform: transform
-        }"
-      >
-        <div class="vintage-texture"></div>
-        <div class="card-content">
-          <div class="card-header">
-            <div class="card-number">
-              #{{ character.id.toString().padStart(6, '0') }}
-            </div>
-            <button class="favorite-button" (click)="toggleFavorite()">
-              <i
-                [class]="character.isFavorite ? 'fas fa-heart' : 'far fa-heart'"
-              ></i>
-            </button>
-          </div>
-          <div class="ministry-logo">
-            <img src="assets/logoministry.png" alt="M" />
-          </div>
-          <h2 class="card-title">IDENTITY CARD</h2>
-          <p class="card-subtitle">{{ character.houseColor.toUpperCase() }}</p>
+      <div class="identity-card" [ngStyle]="{ transform: transform }">
+        <div class="favorite-button" (click)="toggleFavorite()">
+          <i
+            [class]="character.isFavorite ? 'fas fa-heart' : 'far fa-heart'"
+          ></i>
+        </div>
 
-          <div class="photo-container">
-            <div class="price-tag">
-              {{ character.price | currency : 'EUR' : 'symbol' : '1.2-2' }}
-            </div>
+        <div class="character-image">
+          <img
+            [src]="character.image"
+            [alt]="character.name"
+            class="character-photo"
+          />
+          <div
+            class="house-badge"
+            [ngClass]="character.houseColor.toLowerCase()"
+          >
             <img
-              [src]="character.image"
-              [alt]="character.name"
-              class="character-photo"
+              [src]="
+                'assets/houses/' + character.houseColor.toLowerCase() + '.png'
+              "
+              [alt]="character.houseColor"
+              class="house-icon"
             />
           </div>
+        </div>
 
-          <div class="signature">
-            <p class="name">{{ character.name }}</p>
-            <small>Signature of Holder</small>
+        <div class="card-content">
+          <div class="character-info">
+            <h2 class="character-name">{{ character.name }}</h2>
+            <span class="character-id"
+              >#{{ character.id.toString().padStart(6, '0') }}</span
+            >
+            <div class="house-name">{{ character.houseColor }}</div>
           </div>
 
-          <button class="details-button" (click)="onDetailsClick()">
-            Voir détails
-          </button>
-
-          <div class="stamp">
-            <div class="stamp-inner">MINISTRY OF MAGIC</div>
+          <div class="card-footer">
+            <div class="price">
+              {{ character.price | currency : 'EUR' : 'symbol' : '1.2-2' }}
+            </div>
+            <button class="details-button" (click)="onDetailsClick()">
+              <span>Voir plus</span>
+              <i class="fas fa-arrow-right"></i>
+            </button>
           </div>
         </div>
       </div>
@@ -67,278 +64,405 @@ import { Router } from '@angular/router';
   `,
   styles: [
     `
-      @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&display=swap');
-
       .card-container {
+        perspective: 2000px;
         padding: 20px;
+        position: relative;
         display: flex;
         justify-content: center;
         align-items: center;
+        min-height: 100%;
+        width: 100%;
       }
 
       .identity-card {
-        width: 100%;
-        max-width: 300px;
-        height: auto;
-        aspect-ratio: 3/4.2;
-        background: #f8f5e6;
+        width: 300px;
+        position: relative;
         border-radius: 15px;
-        position: relative;
-        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
-        overflow: hidden;
+        background: #1a1a24;
+        border: 3px solid transparent;
+        background-clip: padding-box;
+        padding: 20px;
+        color: #fff;
+        transition: all 0.5s cubic-bezier(0.23, 1, 0.32, 1);
+        margin: 0 auto;
       }
 
-      .vintage-texture {
+      .identity-card::before {
+        content: '';
         position: absolute;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        background-image: url('src/assets/arriereplan.jpg');
-        background-repeat: repeat;
-        background-size: 200px;
-        opacity: 0.5;
-        transform: translateZ(10px);
-      }
-
-      .card-content {
-        position: relative;
-        z-index: 1;
-        height: 100%;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        padding: 8px;
+        inset: -3px;
+        z-index: -1;
+        border-radius: 15px;
+        background: linear-gradient(
+          45deg,
+          #ffd700,
+          #c0a45e,
+          #4a4a4a,
+          #c0a45e,
+          #ffd700
+        );
+        background-size: 400% 400%;
+        animation: gradientMove 15s ease infinite;
+        filter: blur(4px);
       }
 
       .identity-card:hover {
-        transform: translateY(-5px) rotateY(5deg);
-        box-shadow: 15px 15px 30px rgba(0, 0, 0, 0.2);
+        transform: translateY(-5px);
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
       }
 
-      .card-header {
+      .character-image {
+        position: relative;
         width: 100%;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        margin-bottom: 10px;
-      }
-
-      .card-number {
-        font-family: 'Courier New', monospace;
-        color: rgba(0, 0, 0, 0.7);
-        font-size: 0.9em;
-        letter-spacing: 1px;
-      }
-
-      .ministry-logo {
-        width: 40px;
-        height: 40px;
-        opacity: 0.8;
-        transform: translateZ(20px);
-      }
-
-      .card-title {
-        font-family: 'Playfair Display', serif;
-        font-size: clamp(18px, 4vw, 24px);
-        font-weight: 700;
-        text-align: center;
-        margin: 10px 0;
-        color: rgba(0, 0, 0, 0.8);
-        letter-spacing: 3px;
-        text-transform: uppercase;
-        transform: translateZ(20px);
-      }
-
-      .card-subtitle {
-        font-family: 'Playfair Display', serif;
-        font-size: 12px;
-        text-align: center;
-        color: rgba(0, 0, 0, 0.6);
-        margin-bottom: 15px;
-        letter-spacing: 1px;
-        transform: translateZ(20px);
-      }
-
-      .photo-container {
-        width: 60%;
-        max-width: 180px;
-        aspect-ratio: 1/1;
+        height: 280px;
+        border-radius: 12px;
         overflow: hidden;
-        border: 1px solid rgba(0, 0, 0, 0.3);
+        margin-bottom: 20px;
       }
 
-      .photo-container img {
+      .character-photo {
         width: 100%;
         height: 100%;
         object-fit: cover;
-        transition: transform 0.3s ease;
+        transition: all 0.5s ease;
+        filter: sepia(0.2);
       }
 
-      .photo-container:hover img {
-        transform: scale(1.05);
-      }
-
-      .signature {
-        text-align: center;
-        margin-top: 20px;
-        border-top: 1px solid rgba(0, 0, 0, 0.2);
-        padding-top: 10px;
-        width: 80%;
-        transform: translateZ(20px);
-      }
-
-      .signature .name {
-        font-family: 'Playfair Display', serif;
-        font-size: clamp(18px, 4vw, 24px);
-        margin-bottom: 5px;
-        color: rgba(0, 0, 0, 0.8);
-      }
-
-      .signature small {
-        font-size: 10px;
-        color: rgba(0, 0, 0, 0.6);
-        text-transform: uppercase;
-        letter-spacing: 1px;
-      }
-
-      .external-info {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        padding: 10px;
-        background: rgba(255, 255, 255, 0.9);
-        border-radius: 8px;
-        margin-top: 10px;
-      }
-
-      .date-section {
-        font-size: 0.9em;
-        color: #666;
-      }
-
-      .favorite-button {
-        background: none;
-        border: none;
-        cursor: pointer;
-        font-size: 1.2em;
-        color: #740001;
-        transition: transform 0.2s ease;
-      }
-
-      .favorite-button:hover {
-        transform: scale(1.1);
-      }
-
-      .stamp {
+      .character-image::after {
+        content: '';
         position: absolute;
-        bottom: 68px;
-        right: 26px;
-        width: 60px;
-        height: 60px;
-        border: 2px solid rgba(0, 0, 0, 0.2);
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(
+          to bottom,
+          rgba(26, 26, 36, 0) 0%,
+          rgba(26, 26, 36, 0.8) 100%
+        );
+      }
+
+      .character-image:hover .character-photo {
+        transform: scale(1.1);
+        filter: sepia(0);
+      }
+
+      .house-badge {
+        position: absolute;
+        bottom: 15px;
+        left: 15px;
+        width: 50px;
+        height: 50px;
         border-radius: 50%;
+        z-index: 2;
         display: flex;
         align-items: center;
         justify-content: center;
-        transform: rotate(-15deg);
-        opacity: 0.8;
+        box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+        animation: magicFloat 6s ease-in-out infinite;
       }
 
-      .stamp-inner {
-        font-size: 8px;
-        text-align: center;
-        line-height: 1;
-        color: rgba(0, 0, 0, 0.6);
-        text-transform: uppercase;
-        letter-spacing: 0.5px;
+      .house-icon {
+        width: 35px;
+        height: 35px;
+        filter: drop-shadow(0 0 5px rgba(255, 255, 255, 0.7));
+        animation: magicSpin 20s linear infinite;
       }
 
-      .watermark {
+      .gryffondor {
+        background: radial-gradient(circle at 30% 30%, #d3a625, #740001);
+        border: 2px solid #ffd700;
+      }
+      .serpentard {
+        background: radial-gradient(circle at 30% 30%, #2a623d, #1a472a);
+        border: 2px solid #silver;
+      }
+      .serdaigle {
+        background: radial-gradient(circle at 30% 30%, #222f5b, #0e1a40);
+        border: 2px solid #bronze;
+      }
+      .poufsouffle {
+        background: radial-gradient(circle at 30% 30%, #f0c75e, #ecb939);
+        border: 2px solid #000000;
+      }
+
+      .favorite-button {
         position: absolute;
-        bottom: 20px;
-        left: 50%;
-        transform: translateX(-50%);
+        top: 15px;
+        right: 15px;
+        z-index: 10;
+        width: 40px;
+        height: 40px;
+        background: rgba(255, 255, 255, 0.1);
+        backdrop-filter: blur(5px);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        border-radius: 50%;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.4s ease;
+      }
+
+      .favorite-button i {
+        color: #ff4757;
+        font-size: 1.2rem;
+        transition: all 0.4s ease;
+      }
+
+      .favorite-button:hover {
+        transform: scale(1.15);
+        background: rgba(255, 71, 87, 0.2);
+      }
+
+      .favorite-button:hover i {
+        transform: scale(1.2);
+        filter: drop-shadow(0 0 5px rgba(255, 71, 87, 0.8));
+      }
+
+      .character-name {
         font-family: 'Playfair Display', serif;
-        font-size: 120px;
-        color: rgba(0, 0, 0, 0.03);
-        pointer-events: none;
+        font-size: 1.8rem;
+        font-weight: 700;
+        background: linear-gradient(45deg, #ffd700, #ffffff);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        margin: 0;
+        line-height: 1.2;
+        position: relative;
       }
 
-      .price-tag {
-        position: absolute;
-        top: 37%;
-        left: 12%;
-        z-index: 2;
-        background: rgba(0, 0, 0, 0.8);
+      .character-id {
+        font-family: 'Courier Prime', monospace;
+        font-size: 0.9rem;
         color: #fff;
-        padding: 5px 10px;
-        border-radius: 15px;
-        font-family: 'Playfair Display', serif;
-        font-size: clamp(14px, 3vw, 17px);
-        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
-        transform: rotate(-20deg);
+        letter-spacing: 2px;
+        margin-top: 8px;
+      }
+
+      .house-name {
+        font-size: 1.1rem;
+        font-family: 'Crimson Text', serif;
+        color: #fff;
+        margin-top: 8px;
+        font-style: italic;
+        text-shadow: 0 0 10px rgba(192, 164, 94, 0.3);
+      }
+
+      .card-footer {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-top: 25px;
+        padding-top: 15px;
+        border-top: 1px solid rgba(192, 164, 94, 0.3);
+      }
+
+      .price {
+        font-size: 1.4rem;
+        font-weight: 700;
+        background: linear-gradient(45deg, #ffd700, #c0a45e);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
       }
 
       .details-button {
-        position: absolute;
-        bottom: 21%;
-        left: 50%;
-        transform: translateX(-50%) translateZ(20px);
-        padding: 8px 16px;
-        background: rgba(0, 0, 0, 0.8);
-        color: #fff;
+        padding: 12px 24px;
+        background: transparent;
         border: none;
-        border-radius: 20px;
+        position: relative;
+        color: #fff;
         font-family: 'Playfair Display', serif;
-        font-size: 14px;
+        font-size: 1rem;
         cursor: pointer;
-        transition: all 0.3s ease;
-        z-index: 2;
+        overflow: hidden;
+        transition: all 0.4s ease;
       }
 
-      .details-button:hover {
-        background: rgba(0, 0, 0, 0.9);
-        transform: translateX(-50%) translateZ(20px) scale(1.05);
+      .details-button::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(45deg, #ffd700, #c0a45e);
+        opacity: 0.2;
+        z-index: -1;
+        transition: all 0.4s ease;
+        transform: skewX(-15deg);
+      }
+
+      .details-button:hover::before {
+        transform: skewX(-15deg) scale(1.2);
+        opacity: 0.4;
+      }
+
+      .details-button i {
+        margin-left: 8px;
+        transition: transform 0.3s ease;
+      }
+
+      .details-button:hover i {
+        transform: translateX(5px);
+      }
+
+      @keyframes gradientMove {
+        0% {
+          background-position: 0% 50%;
+        }
+        50% {
+          background-position: 100% 50%;
+        }
+        100% {
+          background-position: 0% 50%;
+        }
+      }
+
+      @keyframes magicFloat {
+        0%,
+        100% {
+          transform: translateY(0) rotate(0deg);
+        }
+        25% {
+          transform: translateY(-8px) rotate(3deg);
+        }
+        75% {
+          transform: translateY(8px) rotate(-3deg);
+        }
+      }
+
+      @keyframes magicSpin {
+        0% {
+          transform: rotate(0deg);
+        }
+        100% {
+          transform: rotate(360deg);
+        }
+      }
+
+      @media (max-width: 1200px) {
+        .identity-card {
+          width: 290px;
+        }
+        .character-image {
+          height: 260px;
+        }
+        .character-name {
+          font-size: 1.6rem;
+        }
       }
 
       @media (max-width: 768px) {
         .card-container {
-          padding: 10px;
+          padding: 15px;
         }
 
-        .card-number {
-          font-size: 0.8em;
+        .identity-card {
+          width: 260px;
+          padding: 15px;
         }
 
-        .ministry-logo {
-          width: 30px;
-          height: 30px;
+        .character-image {
+          height: 230px;
         }
 
-        .card-subtitle {
-          font-size: 10px;
+        .character-name {
+          font-size: 1.4rem;
         }
 
-        .signature small {
-          font-size: 8px;
+        .house-badge {
+          width: 40px;
+          height: 40px;
         }
 
-        .stamp {
-          width: 50px;
-          height: 50px;
-          bottom: 60px;
-          right: 20px;
+        .house-icon {
+          width: 28px;
+          height: 28px;
         }
 
-        .stamp-inner {
-          font-size: 6px;
+        .price {
+          font-size: 1.2rem;
+        }
+
+        .details-button {
+          padding: 10px 20px;
+          font-size: 0.9rem;
         }
       }
 
       @media (max-width: 480px) {
+        .card-container {
+          padding: 10px;
+          min-height: auto;
+        }
+
         .identity-card {
-          max-width: 250px;
+          width: 100%;
+          max-width: 240px;
+          padding: 12px;
+          margin: 0 auto;
+        }
+
+        .character-image {
+          height: 200px;
+          margin-bottom: 15px;
+        }
+
+        .character-name {
+          font-size: 1.2rem;
+        }
+
+        .character-id {
+          font-size: 0.8rem;
+        }
+
+        .house-name {
+          font-size: 1rem;
+        }
+
+        .house-badge {
+          width: 35px;
+          height: 35px;
+          bottom: 10px;
+          left: 10px;
+        }
+
+        .house-icon {
+          width: 24px;
+          height: 24px;
+        }
+
+        .favorite-button {
+          width: 35px;
+          height: 35px;
+          top: 10px;
+          right: 10px;
+        }
+
+        .card-footer {
+          margin-top: 15px;
+          padding-top: 12px;
+        }
+
+        .price {
+          font-size: 1.1rem;
+        }
+
+        .details-button {
+          padding: 8px 16px;
+          font-size: 0.85rem;
+        }
+      }
+
+      @media (max-width: 360px) {
+        .identity-card {
+          max-width: 220px;
+        }
+
+        .character-image {
+          height: 180px;
         }
       }
     `,
