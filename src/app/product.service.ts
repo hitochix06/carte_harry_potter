@@ -283,9 +283,9 @@ export class ProductService {
   private cartItemCountSubject = new BehaviorSubject<number>(0);
 
   constructor() {
-    this.updateFavoritesCount();
+    this.loadFavoritesFromLocalStorage();
 
-    // Charger les données du panier depuis localStorage au démarrage
+    // Garder le code existant pour le panier
     if (this.localStorageAvailable) {
       const savedCart = window.localStorage.getItem('cart');
       if (savedCart) {
@@ -358,6 +358,7 @@ export class ProductService {
   toggleFavorite(character: Character): void {
     character.isFavorite = !character.isFavorite;
     this.updateFavoritesCount();
+    this.saveFavoritesToLocalStorage();
     this.charactersSubject.next(this.characters);
   }
 
@@ -440,5 +441,27 @@ export class ProductService {
       0
     );
     this.cartItemCountSubject.next(count);
+  }
+
+  private saveFavoritesToLocalStorage(): void {
+    if (this.localStorageAvailable) {
+      const favorites = this.characters
+        .filter((char) => char.isFavorite)
+        .map((char) => char.id);
+      window.localStorage.setItem('favorites', JSON.stringify(favorites));
+    }
+  }
+
+  private loadFavoritesFromLocalStorage(): void {
+    if (this.localStorageAvailable) {
+      const savedFavorites = window.localStorage.getItem('favorites');
+      if (savedFavorites) {
+        const favoriteIds = JSON.parse(savedFavorites) as number[];
+        this.characters.forEach((char) => {
+          char.isFavorite = favoriteIds.includes(char.id);
+        });
+        this.updateFavoritesCount();
+      }
+    }
   }
 }
