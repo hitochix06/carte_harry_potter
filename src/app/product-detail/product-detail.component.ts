@@ -40,81 +40,67 @@ import { NotificationComponent } from '../notification/notification.component';
           </div>
 
           <div class="character-info">
+            <p class="id">
+              ID: #{{ character.id.toString().padStart(6, '0') }}
+            </p>
+            <p class="date">
+              Date anniversaire: {{ character.createdAt | date : 'dd/MM/yyyy' }}
+            </p>
+
             <div class="character-details">
               <h2>Informations du personnage</h2>
-
               <div class="info-grid">
-                <div class="info-grid">
-                  <div class="info-item">
-                    <span class="label">ID :</span>
-                    <span class="value">{{
-                      character.id.toString().padStart(6, '0')
-                    }}</span>
-                  </div>
-                  <div class="info-item">
-                    <span class="label">Date d'anniversaire :</span>
-                    <span class="value">{{
-                      character.createdAt | date : 'dd/MM/yyyy'
-                    }}</span>
-                  </div>
-                  <div class="info-item">
-                    <span class="label">Baguette magique :</span>
-                    <span class="value">{{
-                      character.wand || 'Inconnue'
-                    }}</span>
-                  </div>
-                  <div class="info-item">
-                    <span class="label">Patronus :</span>
-                    <span class="value">{{
-                      character.patronus || 'Inconnu'
-                    }}</span>
-                  </div>
-                  <div class="info-item">
-                    <span class="label">Année à Poudlard :</span>
-                    <span class="value">{{
-                      character.year || 'Inconnue'
-                    }}</span>
-                  </div>
-                  <div class="info-item">
-                    <span class="label">Rôle :</span>
-                    <span class="value">{{ character.role || 'Inconnu' }}</span>
-                  </div>
-                  <div class="info-item description">
-                    <span class="label">Description :</span>
-                    <p class="value">
-                      {{
-                        character.description || 'Aucune description disponible'
-                      }}
-                    </p>
-                  </div>
+                <div class="info-item">
+                  <span class="label">Baguette magique :</span>
+                  <span class="value">{{ character.wand || 'Inconnue' }}</span>
+                </div>
+                <div class="info-item">
+                  <span class="label">Patronus :</span>
+                  <span class="value">{{
+                    character.patronus || 'Inconnu'
+                  }}</span>
+                </div>
+                <div class="info-item">
+                  <span class="label">Année à Poudlard :</span>
+                  <span class="value">{{ character.year || 'Inconnue' }}</span>
+                </div>
+                <div class="info-item">
+                  <span class="label">Rôle :</span>
+                  <span class="value">{{ character.role || 'Inconnu' }}</span>
+                </div>
+                <div class="info-item description">
+                  <span class="label">Description :</span>
+                  <p class="value">
+                    {{
+                      character.description || 'Aucune description disponible'
+                    }}
+                  </p>
                 </div>
               </div>
+            </div>
 
-              <button class="favorite-button" (click)="toggleFavorite()">
-                <i
-                  [class]="
-                    character.isFavorite ? 'fas fa-heart' : 'far fa-heart'
-                  "
-                ></i>
-                {{
-                  character.isFavorite
-                    ? 'Retirer des favoris'
-                    : 'Ajouter aux favoris'
-                }}
+            <button class="favorite-button" (click)="toggleFavorite()">
+              <i
+                [class]="character.isFavorite ? 'fas fa-heart' : 'far fa-heart'"
+              ></i>
+              {{
+                character.isFavorite
+                  ? 'Retirer des favoris'
+                  : 'Ajouter aux favoris'
+              }}
+            </button>
+            <div class="add-to-cart">
+              <label for="quantity-{{ character.id }}">Quantité :</label>
+              <input
+                id="quantity-{{ character.id }}"
+                type="number"
+                [(ngModel)]="quantity"
+                min="1"
+                max="100"
+              />
+              <button class="cart-button" (click)="addToCart()">
+                <i class="fas fa-shopping-cart"></i> Ajouter au panier
               </button>
-              <div class="add-to-cart">
-                <label for="quantity-{{ character.id }}">Quantité :</label>
-                <input
-                  id="quantity-{{ character.id }}"
-                  type="number"
-                  [(ngModel)]="quantity"
-                  min="1"
-                  max="100"
-                />
-                <button class="cart-button" (click)="addToCart()">
-                  <i class="fas fa-shopping-cart"></i> Ajouter au panier
-                </button>
-              </div>
             </div>
           </div>
         </div>
@@ -127,106 +113,46 @@ import { NotificationComponent } from '../notification/notification.component';
         padding: 2rem;
         max-width: 1200px;
         margin: 0 auto;
-        background: url('/assets/dark-parchment.jpg');
-        min-height: 100vh;
-        position: relative;
-      }
-
-      .detail-container::before {
-        content: '';
-        position: absolute;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        background: url('/assets/floating-candles.png');
-        opacity: 0.15;
-        animation: float 20s infinite linear;
-        pointer-events: none;
-      }
-
-      @keyframes float {
-        from {
-          background-position: 0 0;
-        }
-        to {
-          background-position: 0 100%;
-        }
       }
 
       .back-button {
-        background: #1a1a1a;
+        background: none;
         border: none;
-        padding: 1rem 2rem;
+        padding: 1rem;
         cursor: pointer;
         font-size: 1.1rem;
-        color: #e0b04c;
+        color: #333;
         margin-bottom: 2rem;
-        font-family: 'Cinzel', serif;
-        position: relative;
-        overflow: hidden;
-        transition: all 0.4s ease;
-      }
-
-      .back-button::before {
-        content: '';
-        position: absolute;
-        top: 0;
-        left: -100%;
-        width: 100%;
-        height: 100%;
-        background: linear-gradient(
-          90deg,
-          transparent,
-          rgba(224, 176, 76, 0.2),
-          transparent
-        );
-        transition: 0.5s;
-      }
-
-      .back-button:hover::before {
-        left: 100%;
       }
 
       .detail-content {
         display: grid;
         grid-template-columns: 1fr 1fr;
         gap: 2rem;
-        background: rgba(20, 20, 28, 0.95);
-        border-radius: 8px;
-        box-shadow: 0 0 30px rgba(224, 176, 76, 0.2);
-        border: 1px solid #e0b04c;
-        position: relative;
+        background: white;
+        border-radius: 15px;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
         overflow: hidden;
-        color: #e0e0e0;
       }
 
       .left-section {
         position: relative;
-        overflow: hidden;
       }
 
       .character-image {
         width: 100%;
         height: 100%;
         object-fit: cover;
-        transition: transform 0.5s ease;
-        filter: brightness(0.9);
-      }
-
-      .left-section:hover .character-image {
-        transform: scale(1.05);
       }
 
       .price {
         position: absolute;
         top: 1rem;
         right: 1rem;
-        background: rgba(20, 20, 28, 0.9);
-        color: #e0b04c;
-        padding: 0.8rem 1.5rem;
-        border: 1px solid #e0b04c;
-        font-family: 'Cinzel', serif;
+        background: rgba(0, 0, 0, 0.8);
+        color: white;
+        padding: 0.5rem 1rem;
+        border-radius: 20px;
         font-weight: bold;
       }
 
@@ -235,62 +161,30 @@ import { NotificationComponent } from '../notification/notification.component';
       }
 
       h1 {
-        font-family: 'Cinzel Decorative', cursive;
+        font-family: 'Playfair Display', serif;
         font-size: 2.5rem;
         margin-bottom: 1rem;
-        color: #e0b04c;
-        text-shadow: 0 0 10px rgba(224, 176, 76, 0.3);
-        border-bottom: 1px solid #e0b04c;
-        padding-bottom: 0.5rem;
       }
 
       .house-badge {
         display: inline-block;
-        padding: 0.8rem 1.5rem;
-        border-radius: 4px;
+        padding: 0.5rem 1rem;
+        border-radius: 20px;
         color: white;
         margin-bottom: 1rem;
-        font-family: 'Cinzel', serif;
-        text-transform: uppercase;
-        letter-spacing: 2px;
-        position: relative;
-        overflow: hidden;
       }
 
       .gryffondor {
-        background: linear-gradient(
-          135deg,
-          #740001 0%,
-          #ae0001 50%,
-          #eeba30 100%
-        );
+        background: #740001;
       }
-
       .serpentard {
-        background: linear-gradient(
-          135deg,
-          #1a472a 0%,
-          #2a623d 50%,
-          #5d5d5d 100%
-        );
+        background: #1a472a;
       }
-
       .serdaigle {
-        background: linear-gradient(
-          135deg,
-          #0e1a40 0%,
-          #222f5b 50%,
-          #946b2d 100%
-        );
+        background: #0e1a40;
       }
-
       .poufsouffle {
-        background: linear-gradient(
-          135deg,
-          #ecb939 0%,
-          #f0c75e 50%,
-          #372e29 100%
-        );
+        background: #ecb939;
       }
 
       .character-info {
@@ -309,23 +203,19 @@ import { NotificationComponent } from '../notification/notification.component';
         margin-bottom: 1rem;
       }
 
-      .favorite-button,
-      .cart-button {
-        background: transparent;
-        border: 1px solid #e0b04c;
-        padding: 1rem 2rem;
-        color: #e0b04c;
+      .favorite-button {
+        background: none;
+        border: 2px solid #740001;
+        padding: 0.5rem 1rem;
+        border-radius: 20px;
+        color: #740001;
         cursor: pointer;
-        font-family: 'Cinzel', serif;
-        position: relative;
-        overflow: hidden;
-        transition: all 0.4s ease;
+        transition: all 0.3s ease;
       }
 
-      .favorite-button:hover,
-      .cart-button:hover {
-        background: rgba(224, 176, 76, 0.1);
-        box-shadow: 0 0 15px rgba(224, 176, 76, 0.3);
+      .favorite-button:hover {
+        background: #740001;
+        color: white;
       }
 
       .add-to-cart {
@@ -336,61 +226,49 @@ import { NotificationComponent } from '../notification/notification.component';
       }
 
       .add-to-cart input {
-        background: rgba(20, 20, 28, 0.9);
-        border: 1px solid #e0b04c;
-        color: #e0e0e0;
-        padding: 0.8rem;
         width: 80px;
-        text-align: center;
+        padding: 0.5rem;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+      }
+
+      .cart-button {
+        background: #1a472a;
+        color: white;
+        border: none;
+        padding: 0.5rem 1rem;
+        border-radius: 20px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+      }
+
+      .cart-button:hover {
+        background: #2a573a;
       }
 
       .character-details {
         margin: 2rem 0;
-        padding: 2rem;
-        background: rgba(20, 20, 28, 0.7);
-        border: 1px solid #e0b04c;
-        position: relative;
-      }
-
-      .character-details::before {
-        content: '';
-        position: absolute;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        background: url('/assets/magical-sparkles.png');
-        opacity: 0.1;
-        animation: sparkle 10s infinite linear;
-      }
-
-      @keyframes sparkle {
-        from {
-          background-position: 0 0;
-        }
-        to {
-          background-position: 100% 100%;
-        }
+        padding: 1.5rem;
+        background: #f8f9fa;
+        border-radius: 10px;
       }
 
       .character-details h2 {
-        font-family: 'Cinzel Decorative', cursive;
-        font-size: 1.8rem;
-        color: #e0b04c;
-        text-align: center;
-        margin-bottom: 2rem;
+        font-family: 'Playfair Display', serif;
+        font-size: 1.5rem;
+        margin-bottom: 1.5rem;
+        color: #333;
       }
 
       .info-grid {
         display: grid;
-        gap: 1.5rem;
+        gap: 1.2rem;
       }
 
       .info-item {
         display: grid;
         grid-template-columns: 150px 1fr;
         gap: 1rem;
-        align-items: center;
       }
 
       .info-item.description {
@@ -398,13 +276,12 @@ import { NotificationComponent } from '../notification/notification.component';
       }
 
       .label {
-        color: #e0b04c;
-        font-family: 'Cinzel', serif;
         font-weight: 600;
+        color: #666;
       }
 
       .value {
-        color: #e0e0e0;
+        color: #333;
       }
 
       .description .value {
@@ -413,80 +290,12 @@ import { NotificationComponent } from '../notification/notification.component';
       }
 
       @media (max-width: 768px) {
-        .detail-container {
-          padding: 1rem;
-        }
-
         .detail-content {
           grid-template-columns: 1fr;
-          gap: 1rem;
         }
-
-        .left-section {
-          max-height: 300px;
-          overflow: hidden;
-        }
-
-        .right-section {
-          padding: 1rem;
-        }
-
-        h1 {
-          font-size: 1.8rem;
-        }
-
-        .character-details {
-          padding: 1rem;
-          margin: 1rem 0;
-        }
-
         .info-item {
           grid-template-columns: 1fr;
-          gap: 0.5rem;
-        }
-
-        .add-to-cart {
-          flex-direction: column;
-          align-items: stretch;
-        }
-
-        .add-to-cart input {
-          width: 100%;
-        }
-
-        .cart-button,
-        .favorite-button {
-          width: 100%;
-          margin-top: 0.5rem;
-        }
-
-        .back-button {
-          width: 100%;
-          margin-bottom: 1rem;
-        }
-
-        .price {
-          font-size: 0.9rem;
-          padding: 0.5rem 1rem;
-        }
-
-        .character-details h2 {
-          font-size: 1.5rem;
-        }
-      }
-
-      @media (max-width: 480px) {
-        .detail-container {
-          padding: 0.5rem;
-        }
-
-        h1 {
-          font-size: 1.5rem;
-        }
-
-        .house-badge {
-          padding: 0.5rem 1rem;
-          font-size: 0.9rem;
+          gap: 0.3rem;
         }
       }
     `,
