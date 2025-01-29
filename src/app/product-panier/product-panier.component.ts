@@ -14,13 +14,13 @@ import { NgForm } from '@angular/forms';
   standalone: true,
   imports: [CommonModule, FormsModule, MatDialogModule],
   template: `
-    <div class="min-h-screen bg-gray-50">
+    <div class="min-h-screen">
       <div class="max-w-5xl mx-auto px-4 py-12">
         <!-- En-tête du panier -->
         <div class="flex items-center justify-between mb-8">
-          <h1 class="text-4xl font-extrabold text-gryffindor">
-            Mon Panier
-            <span class="text-sm font-normal text-gray-500 ml-2">
+          <h1 class="text-4xl font-['Cinzel'] text-[#740001]">
+            Chaudron Magique
+            <span class="text-sm font-['Inter'] text-[#2A2A2A] ml-2">
               ({{ cartItems.length }} articles)
             </span>
           </h1>
@@ -32,41 +32,45 @@ import { NgForm } from '@angular/forms';
           <div class="lg:col-span-2">
             <div
               *ngIf="cartItems.length === 0"
-              class="text-center py-12 bg-white rounded-xl shadow-sm"
+              class="text-center py-12 bg-[#F9F7F1] rounded-xl shadow-[0_0_15px_rgba(0,0,0,0.1)] border-2 border-[#C0A875]"
             >
               <img
                 src="assets/logoministry.png"
-                class="w-20 mx-auto mb-4"
+                class="w-20 mx-auto mb-4 opacity-70"
                 alt="Panier vide"
               />
-              <p class="text-gray-500">Votre panier est vide</p>
+              <p class="text-[#4A4A4A] font-['Cinzel']">
+                Votre chaudron est vide
+              </p>
             </div>
 
             <div *ngIf="cartItems.length > 0" class="space-y-4">
               <div
                 *ngFor="let item of cartItems"
-                class="bg-white rounded-xl shadow-sm p-6 transition-all hover:shadow-md"
+                class="bg-[#F9F7F1] rounded-xl shadow-[0_0_15px_rgba(0,0,0,0.1)] p-6 transition-all hover:shadow-[0_0_20px_rgba(192,168,117,0.3)] border-2 border-[#C0A875]"
               >
                 <div class="flex items-center gap-6">
                   <div class="relative w-24 h-24 flex-shrink-0">
                     <img
                       [src]="item.product.image"
                       [alt]="item.product.name"
-                      class="w-full h-full object-cover rounded-lg"
+                      class="w-full h-full object-cover rounded-lg border-2 border-[#C0A875]"
                     />
                   </div>
 
                   <div class="flex-grow">
-                    <h3 class="font-semibold text-lg text-gray-800">
+                    <h3 class="font-['Cinzel'] text-lg text-[#2A2A2A]">
                       {{ item.product.name }}
                     </h3>
-                    <p class="text-gryffindor font-medium mt-1">
-                      {{ item.product.price }} € / unité
+                    <p class="text-[#740001] font-medium mt-1">
+                      {{ item.product.price }} Gallions
                     </p>
                   </div>
 
                   <div class="flex flex-col items-end gap-4">
-                    <div class="flex items-center bg-gray-100 rounded-lg">
+                    <div
+                      class="flex items-center bg-[#E4D5B7] rounded-lg border border-[#C0A875]"
+                    >
                       <button
                         (click)="decrementQuantity(item)"
                         class="p-2 hover:bg-gray-200 rounded-l-lg transition-colors"
@@ -109,9 +113,9 @@ import { NgForm } from '@angular/forms';
                     </div>
                     <button
                       (click)="removeFromCart(item)"
-                      class="text-red-500 hover:text-red-700 transition-colors"
+                      class="text-[#740001] hover:text-[#4A0001] transition-colors font-['Inter']"
                     >
-                      Supprimer
+                      Evanesco
                     </button>
                   </div>
                 </div>
@@ -121,8 +125,12 @@ import { NgForm } from '@angular/forms';
 
           <!-- Résumé et formulaire de commande -->
           <div class="lg:col-span-1">
-            <div class="bg-white rounded-xl shadow-sm p-6 sticky top-4">
-              <h2 class="text-xl font-bold text-gray-800 mb-6">Résumé</h2>
+            <div
+              class="bg-[#F9F7F1] rounded-xl shadow-[0_0_15px_rgba(0,0,0,0.1)] p-6 sticky top-4 border-2 border-[#C0A875]"
+            >
+              <h2 class="text-xl font-['Cinzel'] text-[#2A2A2A] mb-6">
+                Parchemin de commande
+              </h2>
 
               <div class="space-y-4 mb-6">
                 <div class="flex justify-between">
@@ -156,8 +164,8 @@ import { NgForm } from '@angular/forms';
                     name="name"
                     ngModel
                     required
-                    placeholder="Votre nom"
-                    class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-gryffindor focus:border-gryffindor"
+                    placeholder="Votre nom de sorcier"
+                    class="w-full px-4 py-3 rounded-lg border-2 border-[#C0A875] bg-[#F9F7F1] focus:ring-2 focus:ring-[#740001] focus:border-[#740001] font-['Inter']"
                   />
                 </div>
 
@@ -170,7 +178,7 @@ import { NgForm } from '@angular/forms';
                     required
                     pattern="[^@]*@[^@]*"
                     placeholder="Votre email"
-                    class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-gryffindor focus:border-gryffindor"
+                    class="w-full px-4 py-3 rounded-lg border-2 border-[#C0A875] bg-[#F9F7F1] focus:ring-2 focus:ring-[#740001] focus:border-[#740001] font-['Inter']"
                     #email="ngModel"
                   />
                   <div
@@ -194,16 +202,16 @@ import { NgForm } from '@angular/forms';
                     ngModel
                     required
                     placeholder="Votre adresse"
-                    class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-gryffindor focus:border-gryffindor"
+                    class="w-full px-4 py-3 rounded-lg border-2 border-[#C0A875] bg-[#F9F7F1] focus:ring-2 focus:ring-[#740001] focus:border-[#740001] font-['Inter']"
                   />
                 </div>
 
                 <button
                   type="submit"
                   [disabled]="orderForm.invalid"
-                  class="w-full py-4 bg-gryffindor text-white font-bold rounded-lg hover:bg-red-900 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+                  class="w-full py-4 bg-[#740001] text-white font-['Cinzel'] rounded-lg hover:bg-[#4A0001] transition-all disabled:opacity-50 disabled:cursor-not-allowed"
                 >
-                  Valider la commande
+                  Alohomora
                 </button>
               </form>
             </div>
