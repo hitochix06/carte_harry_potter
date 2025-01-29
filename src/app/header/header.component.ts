@@ -271,6 +271,7 @@ import { faShoppingCart } from '@fortawesome/free-solid-svg-icons';
           font-size: 1.2rem;
           border-bottom: 1px solid rgba(211, 166, 37, 0.3);
           border-radius: 0;
+          text-align: center;
         }
 
         .nav-link:last-child {
@@ -302,8 +303,8 @@ import { faShoppingCart } from '@fortawesome/free-solid-svg-icons';
         }
 
         .cart-badge {
-          top: 10px;
-          right: -15px;
+          top: 18px;
+          right: 108px;
         }
 
         .hamburger,
