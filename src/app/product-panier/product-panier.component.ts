@@ -135,7 +135,9 @@ import { NgForm } from '@angular/forms';
               <div class="space-y-4 mb-6">
                 <div class="flex justify-between">
                   <span class="text-gray-600">Sous-total</span>
-                  <span class="font-medium">{{ total }} €</span>
+                  <span class="font-medium"
+                    >{{ total | number : '1.2-2' }} €</span
+                  >
                 </div>
                 <div class="flex justify-between">
                   <span class="text-gray-600">Livraison</span>
@@ -145,7 +147,7 @@ import { NgForm } from '@angular/forms';
                   <div class="flex justify-between">
                     <span class="font-bold">Total</span>
                     <span class="font-bold text-gryffindor text-xl"
-                      >{{ total }} €</span
+                      >{{ total | number : '1.2-2' }} €</span
                     >
                   </div>
                 </div>
@@ -237,7 +239,7 @@ export class ProductPanierComponent implements OnInit {
   }
 
   calculateTotal() {
-    this.total = this.productService.calculateTotal();
+    this.total = Math.round(this.productService.calculateTotal() * 100) / 100;
   }
 
   incrementQuantity(item: { product: Character; quantity: number }) {
