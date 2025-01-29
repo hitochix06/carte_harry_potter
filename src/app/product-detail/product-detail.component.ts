@@ -38,6 +38,16 @@ import { NotificationComponent } from '../notification/notification.component';
           >
             {{ character.houseColor }}
           </div>
+          <button class="favorite-button" (click)="toggleFavorite()">
+            <i
+              [class]="character.isFavorite ? 'fas fa-heart' : 'far fa-heart'"
+            ></i>
+            {{
+              character.isFavorite
+                ? 'Retirer des favoris'
+                : 'Ajouter aux favoris'
+            }}
+          </button>
 
           <div class="character-info">
             <p class="id">
@@ -79,16 +89,6 @@ import { NotificationComponent } from '../notification/notification.component';
               </div>
             </div>
 
-            <button class="favorite-button" (click)="toggleFavorite()">
-              <i
-                [class]="character.isFavorite ? 'fas fa-heart' : 'far fa-heart'"
-              ></i>
-              {{
-                character.isFavorite
-                  ? 'Retirer des favoris'
-                  : 'Ajouter aux favoris'
-              }}
-            </button>
             <div class="add-to-cart">
               <label for="quantity-{{ character.id }}">Quantité :</label>
               <input
@@ -179,7 +179,7 @@ import { NotificationComponent } from '../notification/notification.component';
         padding: 0.5rem 1rem;
         border-radius: 20px;
         color: white;
-        margin-bottom: 1rem;
+        margin: 10px;
       }
 
       .gryffondor {
@@ -212,6 +212,7 @@ import { NotificationComponent } from '../notification/notification.component';
       }
 
       .favorite-button {
+        margin-top: 1rem;
         background: none;
         border: 2px solid #740001;
         padding: 0.5rem 1rem;
